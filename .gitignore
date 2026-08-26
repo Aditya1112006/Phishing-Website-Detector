@@ -1,0 +1,52 @@
+# Virtual Environments
+ml_env/
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Data & Datasets (50MB+ CSV files / raw data)
+data/
+*.csv
+*.parquet
+*.sqlite
+*.db
+
+# Trained Models & Machine Learning Artifacts
+models/
+*.pkl
+*.joblib
+*.h5
+*.onnx
+*.pth
+*.pt
+
+# Sensitive & Environment Files
+.env
+.env.*
+secrets.json
+config.json
+credentials.json
+*.pem
+*.key
+
+# Jupyter Notebook Checkpoints & Caches
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Editor & OS Specific Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+desktop.ini

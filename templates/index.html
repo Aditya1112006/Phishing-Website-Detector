@@ -34,6 +34,12 @@
 
         </form>
 
+        {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+        {% endif %}
+
         {% if result %}
 
             <div class="result

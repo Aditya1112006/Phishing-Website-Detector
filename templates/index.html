@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Phishing URL Detector</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Phishing URL Detector</h1>
+
+        <p class="subtitle">
+            Enter a URL to check whether it is potentially phishing or legitimate.
+        </p>
+
+        <form action="/predict" method="POST">
+
+            <input
+                type="text"
+                name="url"
+                placeholder="https://example.com"
+                value="{{ url if url else '' }}"
+                required
+            >
+
+            <button type="submit">
+                Check URL
+            </button>
+
+        </form>
+
+        {% if result %}
+
+            <div class="result
+                {% if result == 'PHISHING' %}
+                    phishing
+                {% else %}
+                    legitimate
+                {% endif %}
+            ">
+
+                <h2>
+                    Result: {{ result }}
+                </h2>
+                
+                <p class="checked-url">
+                    <strong>URL analyzed:</strong>
+                    {{ url }}
+                </p>
+
+                <div class="probability-section">
+
+                    <div class="probability-label">
+                        <span>Phishing</span>
+                        <strong>{{ phishing_probability }}%</strong>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div
+                            class="progress phishing-progress"
+                            data-width="{{ phishing_probability }}">
+                        </div>
+                    </div>
+
+
+                    <div class="probability-label">
+                        <span>Legitimate</span>
+                        <strong>{{ legitimate_probability }}%</strong>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div
+                            class="progress legitimate-progress"
+                            data-width="{{ legitimate_probability }}">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+<script>
+    document.querySelectorAll(".progress").forEach(function(bar) {
+        bar.style.width = bar.dataset.width + "%";
+    });
+</script>
+</body>
+</html>

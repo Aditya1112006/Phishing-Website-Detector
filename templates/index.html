@@ -3,101 +3,653 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="description" content="Analyze any URL for phishing indicators using a machine learning classifier trained on 235,000+ URLs.">
     <title>Phishing URL Detector</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="page">
+        <div class="card">
 
-        <h1>Phishing URL Detector</h1>
-
-        <p class="subtitle">
-            Enter a URL to check whether it is potentially phishing or legitimate.
-        </p>
-
-        <form action="/predict" method="POST">
-
-            <input
-                type="text"
-                name="url"
-                placeholder="https://example.com"
-                value="{{ url if url else '' }}"
-                required
-            >
-
-            <button type="submit">
-                Check URL
-            </button>
-
-        </form>
-
-        {% if error %}
-            <div class="error-message">
-                {{ error }}
-            </div>
-        {% endif %}
-
-        {% if result %}
-
-            <div class="result
-                {% if result == 'PHISHING' %}
-                    phishing
-                {% else %}
-                    legitimate
-                {% endif %}
-            ">
-
-                <h2>
-                    Result: {{ result }}
-                </h2>
-                
-                <p class="checked-url">
-                    <strong>URL analyzed:</strong>
-                    {{ url }}
+            <!-- Header -->
+            <div class="header">
+                <div class="header-top">
+                    <span class="shield-icon">🛡️</span>
+                    <button type="button" class="benchmark-btn" id="openBenchmarkBtn" title="View Model Architecture and Benchmarks">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        Model & Benchmarks
+                    </button>
+                </div>
+                <h1>Phishing URL Detector</h1>
+                <p class="subtitle">
+                    Analyze any URL for phishing indicators using a multi-tiered defense architecture and Random Forest ML.
                 </p>
+            </div>
 
-                <div class="probability-section">
+            <!-- Mode Switcher Tabs -->
+            <div class="mode-tabs">
+                <button type="button" class="tab-btn active" id="singleTabBtn">Single URL</button>
+                <button type="button" class="tab-btn" id="batchTabBtn">Bulk / Batch Scan</button>
+            </div>
 
-                    <div class="probability-label">
-                        <span>Phishing</span>
-                        <strong>{{ phishing_probability }}%</strong>
+            <!-- Single URL Form -->
+            <form id="urlForm" action="/predict" method="POST">
+                <div class="input-group">
+                    <input
+                        id="urlInput"
+                        type="text"
+                        name="url"
+                        placeholder="https://example.com"
+                        value="{{ url if url else '' }}"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                    <button type="submit" id="submitBtn">
+                        <span class="btn-text">Analyze</span>
+                        <span class="btn-spinner">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                <path d="M12 2a10 10 0 0 1 10 10"/>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Batch URL Form -->
+            <div id="batchSection" style="display: none;">
+                <div class="batch-input-wrapper">
+                    <textarea
+                        id="batchInput"
+                        class="batch-textarea"
+                        placeholder="Enter up to 25 URLs (one URL per line)&#10;e.g.&#10;https://google.com&#10;https://paypal-security-center.com/login&#10;https://en.wikipedia.org"
+                        rows="4"
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+                <div class="batch-actions">
+                    <button type="button" class="batch-btn" id="runBatchBtn">
+                        <span class="btn-text">Analyze Batch</span>
+                        <span class="btn-spinner" id="batchSpinner" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                <path d="M12 2a10 10 0 0 1 10 10"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <button type="button" class="sample-load-btn" id="loadSampleBatchBtn">⚡ Load Sample Threat Set</button>
+                </div>
+
+                <!-- Batch Results Container -->
+                <div id="batchResultsCard" class="batch-results-card" style="display: none;">
+                    <div class="batch-results-header">
+                        <span class="batch-results-title" id="batchResultsCount">Batch Results</span>
+                        <button type="button" class="csv-export-btn" id="exportCsvBtn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export CSV
+                        </button>
                     </div>
+                    <div class="batch-table-wrapper">
+                        <table class="batch-table">
+                            <thead>
+                                <tr>
+                                    <th>URL</th>
+                                    <th>Verdict</th>
+                                    <th>Risk %</th>
+                                    <th>Inspection Note</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batchTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="progress-bar">
-                        <div
-                            class="progress phishing-progress"
-                            data-width="{{ phishing_probability }}">
+            <!-- Error message -->
+            {% if error %}
+                <div class="error-message" id="errorMessage">
+                    <span class="error-icon">⚠️</span>
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <!-- Result card -->
+            {% if result %}
+                <div class="result-card {{ 'result-phishing' if result == 'PHISHING' else 'result-legitimate' }}">
+
+                    <div class="result-header">
+                        <span class="result-icon">
+                            {{ '🚨' if result == 'PHISHING' else '✅' }}
+                        </span>
+                        <div>
+                            <div class="result-label">
+                                {{ 'Potentially Phishing' if result == 'PHISHING' else 'Likely Legitimate' }}
+                            </div>
+                            <div class="result-badge {{ 'badge-phishing' if result == 'PHISHING' else 'badge-legitimate' }}">
+                                {{ result }}
+                            </div>
                         </div>
                     </div>
 
-
-                    <div class="probability-label">
-                        <span>Legitimate</span>
-                        <strong>{{ legitimate_probability }}%</strong>
+                    <div class="url-analyzed">
+                        <span class="url-label">URL analyzed</span>
+                        <span class="url-value">{{ url }}</span>
                     </div>
 
-                    <div class="progress-bar">
-                        <div
-                            class="progress legitimate-progress"
-                            data-width="{{ legitimate_probability }}">
+                    {% if impersonation_warning %}
+                    <div class="impersonation-alert">
+                        <span class="impersonation-icon">⚠️</span>
+                        <div class="impersonation-text">{{ impersonation_warning }}</div>
+                    </div>
+                    {% endif %}
+
+                    <div class="probabilities">
+
+                        <div class="prob-row">
+                            <div class="prob-info">
+                                <span class="prob-name phishing-color">Phishing</span>
+                                <span class="prob-value">{{ phishing_probability }}%</span>
+                            </div>
+                            <div class="prob-bar-bg">
+                                <div class="prob-bar phishing-bar" data-width="{{ phishing_probability }}"></div>
+                            </div>
+                        </div>
+
+                        <div class="prob-row">
+                            <div class="prob-info">
+                                <span class="prob-name legitimate-color">Legitimate</span>
+                                <span class="prob-value">{{ legitimate_probability }}%</span>
+                            </div>
+                            <div class="prob-bar-bg">
+                                <div class="prob-bar legitimate-bar" data-width="{{ legitimate_probability }}"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% if insights %}
+                    <div class="insights-section">
+                        <div class="insights-title">URL Inspection Factors</div>
+                        <div class="insights-grid">
+                            {% for item in insights %}
+                            <div class="insight-item {{ 'safe' if item.safe else 'risk' }}">
+                                <div class="insight-header">
+                                    <span class="insight-name">{{ item.name }}</span>
+                                    <span class="insight-badge {{ 'badge-safe' if item.safe else 'badge-risk' }}">{{ item.badge }}</span>
+                                </div>
+                                <div class="insight-value">{{ item.value }}</div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
+                    {% endif %}
 
+                    <p class="disclaimer">
+                        Analysis is based on URL structure only. Model probabilities are statistical
+                        estimates — not proof of malicious or safe intent.
+                    </p>
+
+                </div>
+            {% endif %}
+
+            <!-- Recent Scans History Section -->
+            <div class="history-section" id="historySection" style="display: none;">
+                <div class="history-header">
+                    <span class="history-title">Recent Scans</span>
+                    <button type="button" class="history-clear-btn" id="clearHistoryBtn">Clear History</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Hidden scan metadata for clean JavaScript logging without in-script Jinja tags -->
+    {% if result and url %}
+    <div id="latestScanMeta" data-url="{{ url }}" data-result="{{ result }}" style="display: none;"></div>
+    {% endif %}
+
+    <!-- Model Architecture & Benchmark Modal -->
+    <div class="modal-backdrop" id="benchmarkModal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h2 class="modal-title">Model Architecture & Academic Benchmarks</h2>
+                    <p class="modal-subtitle">PhiUSIIL Dataset • 235,370 URLs • Random Forest Classifier</p>
+                </div>
+                <button type="button" class="modal-close" id="closeBenchmarkBtn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- 1. Key Metrics -->
+                <div class="modal-section-title">Evaluation Metrics (Held-out Test Set)</div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">99.54%</div>
+                        <div class="metric-label">Accuracy</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">99.39%</div>
+                        <div class="metric-label">Precision</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">99.81%</div>
+                        <div class="metric-label">Recall</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">99.60%</div>
+                        <div class="metric-label">F1-Score</div>
+                    </div>
+                </div>
+
+                <!-- 2. Multi-tier Architecture -->
+                <div class="modal-section-title">Multi-Tier Defense Pipeline</div>
+                <div class="arch-flow">
+                    <div class="arch-step">
+                        <div class="arch-badge">Tier 1</div>
+                        <div class="arch-name">Domain Allowlist</div>
+                        <div class="arch-desc">390+ Known Authorities</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-step">
+                        <div class="arch-badge">Tier 2</div>
+                        <div class="arch-name">Brand Spoof Engine</div>
+                        <div class="arch-desc">Typosquatting Rules</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-step">
+                        <div class="arch-badge">Tier 3</div>
+                        <div class="arch-name">Random Forest ML</div>
+                        <div class="arch-desc">100 Trees • 18 Features</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-step">
+                        <div class="arch-badge">Tier 4</div>
+                        <div class="arch-name">XAI Insights</div>
+                        <div class="arch-desc">Explainable Factors</div>
+                    </div>
+                </div>
+
+                <!-- 3. Feature Importance -->
+                <div class="modal-section-title">Top Feature Importances (Gini Impurity)</div>
+                <div class="importance-list">
+                    <div class="importance-row">
+                        <span class="feat-name">IsHTTPS (Protocol Security)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 40.2%;"></div></div>
+                        <span class="feat-pct">40.2%</span>
+                    </div>
+                    <div class="importance-row">
+                        <span class="feat-name">NoOfDegitsInURL (Numeric counts)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 12.5%;"></div></div>
+                        <span class="feat-pct">12.5%</span>
+                    </div>
+                    <div class="importance-row">
+                        <span class="feat-name">DomainLength (Length of hostname)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 10.5%;"></div></div>
+                        <span class="feat-pct">10.5%</span>
+                    </div>
+                    <div class="importance-row">
+                        <span class="feat-name">URLLength (Overall string length)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 9.9%;"></div></div>
+                        <span class="feat-pct">9.9%</span>
+                    </div>
+                    <div class="importance-row">
+                        <span class="feat-name">DigitRatioInURL (Digits ratio)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 8.1%;"></div></div>
+                        <span class="feat-pct">8.1%</span>
+                    </div>
+                    <div class="importance-row">
+                        <span class="feat-name">NoOfLettersInURL (Alphabet count)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 5.9%;"></div></div>
+                        <span class="feat-pct">5.9%</span>
+                    </div>
+                    <div class="importance-row">
+                        <span class="feat-name">LetterRatioInURL (Letters ratio)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 4.7%;"></div></div>
+                        <span class="feat-pct">4.7%</span>
+                    </div>
+                    <div class="importance-row">
+                        <span class="feat-name">NoOfSubDomain (Subdomain depth)</span>
+                        <div class="feat-bar-bg"><div class="feat-bar" style="width: 3.0%;"></div></div>
+                        <span class="feat-pct">3.0%</span>
+                    </div>
+                </div>
+
+                <!-- 4. Confusion Matrix Profile -->
+                <div class="modal-section-title">Confusion Matrix Profile (47,074 Test Samples)</div>
+                <div class="cm-grid">
+                    <div class="cm-cell cm-tn">
+                        <div class="cm-num">26,808</div>
+                        <div class="cm-title">True Negative</div>
+                        <div class="cm-desc">Legitimate Correctly Verified</div>
+                    </div>
+                    <div class="cm-cell cm-fp">
+                        <div class="cm-num">162</div>
+                        <div class="cm-title">False Positive</div>
+                        <div class="cm-desc">Legitimate Flagged as Phishing</div>
+                    </div>
+                    <div class="cm-cell cm-fn">
+                        <div class="cm-num">39</div>
+                        <div class="cm-title">False Negative</div>
+                        <div class="cm-desc">Phishing Missed as Safe</div>
+                    </div>
+                    <div class="cm-cell cm-tp">
+                        <div class="cm-num">20,065</div>
+                        <div class="cm-title">True Positive</div>
+                        <div class="cm-desc">Phishing Correctly Caught</div>
+                    </div>
                 </div>
 
             </div>
-
-        {% endif %}
-
+        </div>
     </div>
 
-<script>
-    document.querySelectorAll(".progress").forEach(function(bar) {
-        bar.style.width = bar.dataset.width + "%";
-    });
-</script>
+    <!-- JavaScript Execution (Pure JS, Clean DOM Listeners) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Animate probability bars after page load
+            document.querySelectorAll(".prob-bar").forEach(function(bar) {
+                var width = bar.dataset.width;
+                setTimeout(function() {
+                    bar.style.width = width + "%";
+                }, 120);
+            });
+
+            // Loading state when single URL form is submitted
+            var urlFormEl = document.getElementById("urlForm");
+            var submitBtnEl = document.getElementById("submitBtn");
+            if (urlFormEl && submitBtnEl) {
+                urlFormEl.addEventListener("submit", function() {
+                    submitBtnEl.classList.add("loading");
+                    submitBtnEl.disabled = true;
+                });
+            }
+
+            // ---- Recent Scans (LocalStorage) ----
+            var HISTORY_KEY = "phishing_detector_scans";
+
+            function getScans() {
+                try {
+                    return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function saveScan(url, result) {
+                if (!url || !result) return;
+                try {
+                    var scans = getScans();
+                    scans = scans.filter(function(s) { return s.url !== url; });
+                    scans.unshift({
+                        url: url,
+                        result: result,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    });
+                    if (scans.length > 5) scans = scans.slice(0, 5);
+                    localStorage.setItem(HISTORY_KEY, JSON.stringify(scans));
+                } catch (err) {
+                    console.warn("Could not save to localStorage", err);
+                }
+            }
+
+            function escapeHtml(str) {
+                if (!str) return "";
+                var div = document.createElement("div");
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function renderHistory() {
+                var scans = getScans();
+                var section = document.getElementById("historySection");
+                var list = document.getElementById("historyList");
+                if (!section || !list) return;
+
+                if (scans.length === 0) {
+                    section.style.display = "none";
+                    return;
+                }
+
+                section.style.display = "block";
+                list.innerHTML = "";
+
+                scans.forEach(function(item) {
+                    var row = document.createElement("div");
+                    row.className = "history-item";
+                    row.title = "Click to inspect " + item.url;
+
+                    var isPhishing = item.result === "PHISHING";
+                    var badgeClass = isPhishing ? "badge-phishing" : "badge-legitimate";
+                    var icon = isPhishing ? "🚨" : "✅";
+
+                    row.innerHTML =
+                        '<div class="history-left">' +
+                            '<span class="history-icon">' + icon + '</span>' +
+                            '<span class="history-url">' + escapeHtml(item.url) + '</span>' +
+                        '</div>' +
+                        '<div class="history-right">' +
+                            '<span class="history-badge ' + badgeClass + '">' + item.result + '</span>' +
+                            '<span class="history-time">' + item.time + '</span>' +
+                        '</div>';
+
+                    row.addEventListener("click", function() {
+                        var input = document.getElementById("urlInput");
+                        if (input) {
+                            input.value = item.url;
+                            input.focus();
+                        }
+                    });
+
+                    list.appendChild(row);
+                });
+            }
+
+            var clearHistoryBtn = document.getElementById("clearHistoryBtn");
+            if (clearHistoryBtn) {
+                clearHistoryBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    try {
+                        localStorage.removeItem(HISTORY_KEY);
+                    } catch (err) {}
+                    renderHistory();
+                });
+            }
+
+            // Check if latest scan meta exists (rendered by Flask outside script tag)
+            var latestMeta = document.getElementById("latestScanMeta");
+            if (latestMeta) {
+                var u = latestMeta.getAttribute("data-url");
+                var r = latestMeta.getAttribute("data-result");
+                if (u && r) {
+                    saveScan(u, r);
+                }
+            }
+
+            renderHistory();
+
+            // ---- Mode Switcher Tabs ----
+            var singleTabBtn = document.getElementById("singleTabBtn");
+            var batchTabBtn = document.getElementById("batchTabBtn");
+            var batchSection = document.getElementById("batchSection");
+
+            if (singleTabBtn && batchTabBtn && urlFormEl && batchSection) {
+                singleTabBtn.addEventListener("click", function() {
+                    singleTabBtn.classList.add("active");
+                    batchTabBtn.classList.remove("active");
+                    urlFormEl.style.display = "block";
+                    batchSection.style.display = "none";
+                });
+
+                batchTabBtn.addEventListener("click", function() {
+                    batchTabBtn.classList.add("active");
+                    singleTabBtn.classList.remove("active");
+                    urlFormEl.style.display = "none";
+                    batchSection.style.display = "block";
+                });
+            }
+
+            // ---- Load Sample Threat Set ----
+            var loadSampleBtn = document.getElementById("loadSampleBatchBtn");
+            var batchInput = document.getElementById("batchInput");
+            if (loadSampleBtn && batchInput) {
+                loadSampleBtn.addEventListener("click", function() {
+                    batchInput.value = [
+                        "https://www.google.com",
+                        "https://paypal-security-center.com/login",
+                        "https://en.wikipedia.org/wiki/Machine_learning",
+                        "https://netflix-billing-update.org",
+                        "http://service-mitld.firebaseapp.com/"
+                    ].join("\n");
+                });
+            }
+
+            // ---- Run Batch Scan & Render ----
+            var runBatchBtn = document.getElementById("runBatchBtn");
+            var batchSpinner = document.getElementById("batchSpinner");
+            var batchResultsCard = document.getElementById("batchResultsCard");
+            var batchTableBody = document.getElementById("batchTableBody");
+            var batchResultsCount = document.getElementById("batchResultsCount");
+            var latestBatchData = [];
+
+            if (runBatchBtn && batchInput && batchTableBody && batchResultsCard) {
+                runBatchBtn.addEventListener("click", function() {
+                    var text = batchInput.value.trim();
+                    if (!text) {
+                        alert("Please enter at least one URL to scan.");
+                        return;
+                    }
+
+                    var urls = text.split("\n").map(function(item) { return item.trim(); }).filter(Boolean);
+                    if (urls.length === 0) return;
+
+                    runBatchBtn.disabled = true;
+                    if (batchSpinner) batchSpinner.style.display = "inline-block";
+
+                    fetch("/api/batch_predict", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ urls: urls })
+                    })
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        runBatchBtn.disabled = false;
+                        if (batchSpinner) batchSpinner.style.display = "none";
+
+                        if (data.status !== "success" || !data.results) {
+                            alert("Batch scan failed: " + (data.message || "Unknown error"));
+                            return;
+                        }
+
+                        latestBatchData = data.results;
+                        batchTableBody.innerHTML = "";
+                        if (batchResultsCount) {
+                            batchResultsCount.textContent = "Batch Results (" + data.results.length + " URLs scanned)";
+                        }
+                        batchResultsCard.style.display = "block";
+
+                        data.results.forEach(function(item) {
+                            var tr = document.createElement("tr");
+                            var isPhish = item.result === "PHISHING";
+                            var badgeClass = isPhish ? "badge-phishing" : "badge-legitimate";
+                            var riskScore = isPhish ? item.phishing_probability + "%" : (100 - item.legitimate_probability).toFixed(1) + "%";
+                            var note = item.impersonation_warning ? "⚠️ Brand Spoofing" : (isPhish ? "Structural Anomalies" : "Verified Clean");
+
+                            tr.innerHTML =
+                                '<td class="batch-url-cell" title="' + escapeHtml(item.url) + '">' + escapeHtml(item.url) + '</td>' +
+                                '<td><span class="history-badge ' + badgeClass + '">' + item.result + '</span></td>' +
+                                '<td class="' + (isPhish ? 'phishing-color' : 'legitimate-color') + '"><b>' + riskScore + '</b></td>' +
+                                '<td class="batch-note-cell">' + note + '</td>';
+
+                            batchTableBody.appendChild(tr);
+
+                            // Save to recent scans history
+                            saveScan(item.url, item.result);
+                        });
+
+                        renderHistory();
+                    })
+                    .catch(function(err) {
+                        runBatchBtn.disabled = false;
+                        if (batchSpinner) batchSpinner.style.display = "none";
+                        alert("Error communicating with server: " + err);
+                    });
+                });
+            }
+
+            // ---- Export CSV Report ----
+            var exportCsvBtn = document.getElementById("exportCsvBtn");
+            if (exportCsvBtn) {
+                exportCsvBtn.addEventListener("click", function() {
+                    if (!latestBatchData || latestBatchData.length === 0) return;
+
+                    var csvRows = [
+                        ["URL", "Verdict", "Phishing Probability (%)", "Legitimate Probability (%)", "Impersonation Alert"]
+                    ];
+
+                    latestBatchData.forEach(function(item) {
+                        csvRows.push([
+                            '"' + item.url.replace(/"/g, '""') + '"',
+                            item.result,
+                            item.phishing_probability,
+                            item.legitimate_probability,
+                            '"' + (item.impersonation_warning || "None").replace(/"/g, '""') + '"'
+                        ]);
+                    });
+
+                    var csvContent = "data:text/csv;charset=utf-8," + csvRows.map(function(e) { return e.join(","); }).join("\n");
+                    var encodedUri = encodeURI(csvContent);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "phishing_batch_report_" + new Date().toISOString().slice(0, 10) + ".csv");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+
+            // ---- Benchmark Modal Handlers ----
+            var modal = document.getElementById("benchmarkModal");
+            var openBtn = document.getElementById("openBenchmarkBtn");
+            var closeBtn = document.getElementById("closeBenchmarkBtn");
+
+            function openModal() {
+                if (modal) {
+                    modal.style.display = "flex";
+                    document.body.style.overflow = "hidden";
+                }
+            }
+
+            function closeModal() {
+                if (modal) {
+                    modal.style.display = "none";
+                    document.body.style.overflow = "auto";
+                }
+            }
+
+            if (openBtn) openBtn.addEventListener("click", openModal);
+            if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+            window.addEventListener("click", function(e) {
+                if (modal && e.target === modal) closeModal();
+            });
+
+            window.addEventListener("keydown", function(e) {
+                if (e.key === "Escape" && modal && modal.style.display === "flex") {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

@@ -1,0 +1,224 @@
+PHISHING URL DETECTOR — ROOT CAUSE ANALYSIS
+Why Famous Legitimate Websites Are Classified as Phishing
+==========================================================
+
+SUMMARY
+-------
+The model correctly classifies websites in the training data distribution
+(like southbankmosaics.com) but misclassifies many famous legitimate
+websites (like instagram.com, google.com, github.com).
+
+This is NOT a code bug. It is a fundamental dataset limitation.
+
+
+==================================================
+THE CORE PROBLEM: WHAT THE MODEL LEARNED
+==================================================
+
+The PhiUSIIL training dataset has a very specific pattern:
+
+  LEGITIMATE URLs in training:
+  ----------------------------
+  https://www.southbankmosaics.com   DomainLength = 20
+  https://www.rewildingargentina.org DomainLength = 22
+  https://www.religionenlibertad.com DomainLength = 22
+  https://www.bulgariaski.com        DomainLength = 15
+  https://www.voicefmradio.co.uk     DomainLength = 18
+  https://www.globalreporting.org    DomainLength = 17
+  https://www.cryptocompare.com      DomainLength = 16
+
+  Pattern: Long, specific niche website domain names.
+  Average DomainLength: ~17-22 characters.
+
+  PHISHING URLs in training:
+  --------------------------
+  https://service-mitld.firebaseapp.com/
+  http://www.teramill.com            DomainLength = 12
+  http://www.shprakserf.gq           DomainLength = 13
+  http://www.komaru.today            DomainLength = 12
+  http://www.ooguy.com               DomainLength = 9
+  http://www.nextraload.com          DomainLength = 14
+
+  Pattern: Short domain names, unusual TLDs, often HTTP.
+
+The model correctly learned this pattern. But the problem is:
+
+
+==================================================
+WHAT FAMOUS LEGITIMATE WEBSITES LOOK LIKE TO THE MODEL
+==================================================
+
+  instagram.com   DomainLength = 13  <-- Short!
+  google.com      DomainLength = 10  <-- Short!
+  facebook.com    DomainLength = 12  <-- Short!
+  twitter.com     DomainLength = 11  <-- Short!
+  amazon.com      DomainLength = 10  <-- Short!
+  github.com      DomainLength = 10  <-- Short!
+
+Famous websites have SHORT, clean, memorable domain names.
+Niche websites (in the training legitimate set) have LONGER names.
+
+The model learned that short-domain URLs look like phishing because
+in the training data, the phishing class had more short domains.
+
+This is the exact opposite of real-world intuition:
+  Real world: short, well-known domain = trustworthy
+  PhiUSIIL model: short domain = suspicious
+
+
+==================================================
+WHY SOUTHBANKMOSAICS.COM WORKS BUT INSTAGRAM.COM DOES NOT
+==================================================
+
+  southbankmosaics.com → DomainLength = 20 → above the boundary → LEGITIMATE
+  instagram.com        → DomainLength = 13 → below the boundary → PHISHING
+
+  The model essentially learned a domain length threshold because
+  the training data's legitimate URLs were almost all long niche
+  domain names, while phishing URLs were often shorter.
+
+
+==================================================
+THE DATASET BIAS — COMPLETE LIST
+==================================================
+
+1. DOMAIN LENGTH BIAS
+   - Training legitimate URLs: long niche domain names (17-22 chars)
+   - Famous legitimate sites: short names (10-14 chars)
+   - Model incorrectly associates short domains with phishing
+
+2. PATH BIAS (found and fixed earlier)
+   - All training legitimate URLs: https://www.DOMAIN.TLD (no path)
+   - Real URLs with paths: classified as phishing
+   - Fixed by removing NoOfSlashesInURL from features
+
+3. HTTPS LIMITATION
+   - 100% of training legitimate URLs use HTTPS
+   - 49% of training phishing URLs also use HTTPS
+   - IsHTTPS=1 helps but cannot override DomainLength bias alone
+
+4. POPULATION BIAS
+   - Training legitimate set: niche websites (Mosaic shops, radio stations, etc.)
+   - Real-world famous sites: not represented in the legitimate training set
+   - The model has NEVER seen instagram.com as legitimate during training
+
+
+==================================================
+WHY TEST ACCURACY IS 99.7% BUT REAL-WORLD FAILS
+==================================================
+
+The 99.7153% accuracy is measured on the HELD-OUT TEST SET.
+The test set comes from the SAME DATA SOURCE as the training set.
+
+So test accuracy = "how well does the model classify PhiUSIIL URLs"
+NOT = "how well does the model classify all real-world URLs"
+
+This is called "distribution shift" or "out-of-distribution failure."
+The model is very good at its training distribution but generalizes
+poorly to URLs not seen during training.
+
+
+==================================================
+WHAT WOULD ACTUALLY FIX THIS
+==================================================
+
+Option A: Better Dataset
+  - Include famous legitimate sites (Alexa Top 10,000) as legitimate samples
+  - This would teach the model that short, well-known domains are legitimate
+  - Estimated improvement: would fix most famous site misclassifications
+
+Option B: Domain Reputation Features (External Data)
+  - Alexa/Tranco rank: low rank number = famous = likely legitimate
+  - Domain age: older domain = more likely legitimate
+  - WHOIS data: registration history
+  - These features cannot be extracted from the URL string alone
+  - Would require API calls or cached databases
+
+Option C: DNS / Certificate Features
+  - SSL certificate issuer
+  - DNS record validation (SPF, DMARC)
+  - These also require external lookups
+
+Option D: Use a Different Dataset
+  - Datasets with more diverse legitimate URLs
+  - Example: combining PhiUSIIL with Alexa top sites
+  - Or using datasets like ISCX-URL-2016, PhishTank + Alexa
+
+
+==================================================
+CURRENT MODEL LIMITATIONS (HONEST SUMMARY)
+==================================================
+
+The current URL-only model:
+
+  WORKS WELL FOR:
+  - Clearly structured phishing URLs (firebase, unusual TLDs)
+  - URLs with suspicious characteristics (IP-based, obfuscated)
+  - Long, niche legitimate websites with unusual domain names
+  - Synthetic phishing test URLs
+
+  DOES NOT WORK WELL FOR:
+  - Famous legitimate websites with short domain names
+    (instagram, google, facebook, twitter, amazon, github)
+  - Simple legitimate homepages (no path, 2-3 slashes)
+  - URLs outside the PhiUSIIL training distribution
+
+  THE MODEL IS NOT:
+  - A real-world production phishing detector
+  - A replacement for domain reputation systems
+  - Guaranteed to correctly classify any given URL
+
+  THE MODEL IS:
+  - A well-engineered ML pipeline demonstrating training-serving consistency
+  - Accurately trained on the PhiUSIIL dataset (99.7153% test accuracy)
+  - A technically valid academic/learning project
+  - Suitable for demonstrating ML engineering concepts
+
+
+==================================================
+HOW TO DOCUMENT THIS HONESTLY
+==================================================
+
+In a project report, interview, or README, state:
+
+  "The model achieves 99.7153% accuracy on the held-out test set
+  derived from the PhiUSIIL dataset. However, performance on
+  out-of-distribution URLs — particularly famous websites with
+  short domain names not represented in the training set — is
+  limited due to a domain length bias in the training data.
+  The training legitimate class consisted primarily of niche
+  websites with longer domain names, while famous legitimate
+  sites (google.com, instagram.com) have shorter names that
+  overlap with the phishing class's domain length distribution.
+  Addressing this would require a more diverse training dataset
+  or external domain reputation features."
+
+This is technically accurate and demonstrates that you understand
+the difference between training set accuracy and real-world
+generalization.
+
+
+==================================================
+WHAT TO DO IN THIS PROJECT
+==================================================
+
+Option 1 (Recommended for now):
+  - Keep the current model as-is
+  - Add a clear disclaimer in the UI that the model is URL-structure-based
+  - Note limitations in the README
+  - Present it honestly as a learning project
+
+Option 2 (If you want to improve accuracy):
+  - Source a supplementary dataset of famous legitimate URLs
+  - Add those to the training set
+  - Retrain
+
+Option 3 (Not recommended):
+  - Do NOT claim the model works perfectly for all real-world URLs
+  - Do NOT present the 99.7% accuracy as real-world performance
+
+
+==========================================================
+DOCUMENT GENERATED: 2026-10-20
+PROJECT: Phishing URL Detector
+==========================================================

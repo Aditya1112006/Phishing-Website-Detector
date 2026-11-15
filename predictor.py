@@ -228,6 +228,7 @@ TARGETED_BRANDS = {
     "wellsfargo": {"wellsfargo.com"},
     "bankofamerica": {"bankofamerica.com"},
     "binance": {"binance.com"},
+    "shoolini": {"shooliniuniversity.com", "shoolini.org"},
 }
 
 
@@ -371,12 +372,25 @@ def predict_url(url: str):
         raise ValueError(f"Invalid URL format: '{url}' is not a valid web URL or domain name.")
 
     extracted = extract_url_features(url)
-    trusted = is_trusted_domain(url)
+    is_domain_listed = is_trusted_domain(url)
     raw_features = {f: extracted.get(f, 0) for f in features}
     syntax_tokens = deconstruct_url_syntax(url)
 
-    # Tier 1: Check known official / reputable domain
-    if trusted:
+    # Tier 1: Defense-in-depth check for authority allowlist
+    # To qualify for Tier 1 legitimate bypass, the destination must:
+    # 1. Host a verified authority domain
+    # 2. Use secure TLS encryption (IsHTTPS == 1; plain HTTP does not get a bypass)
+    # 3. Contain no active hex / percent obfuscation (HasObfuscation == 0)
+    # 4. Have normal subdomain depth (<= 2 levels, defending against subdomain hijack)
+    # 5. Have no anomalous numerical padding in query tokens
+    is_https = extracted.get("IsHTTPS", 0) == 1
+    has_obf = extracted.get("HasObfuscation", 0) == 1
+    deep_sub = extracted.get("NoOfSubDomain", 0) > 2
+    digit_padding = (extracted.get("NoOfDegitsInURL", 0) >= 15 and extracted.get("DigitRatioInURL", 0) >= 0.15)
+
+    tier1_eligible = is_domain_listed and is_https and not has_obf and not deep_sub and not digit_padding
+
+    if tier1_eligible:
         sev = get_risk_severity(0.01, is_trusted=True)
         return {
             "result": "LEGITIMATE",
@@ -384,7 +398,7 @@ def predict_url(url: str):
             "legitimate_probability": 99.99,
             "impersonation_warning": None,
             "defense_tier": "Tier 1: Authority Allowlist",
-            "defense_tier_description": "Verified official domain. Bypasses false-positive shortcut heuristics with zero latency.",
+            "defense_tier_description": "Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed.",
             "insights": get_feature_insights(extracted, is_trusted=True),
             "raw_features": raw_features,
             "risk_severity": sev["level"],
@@ -424,13 +438,24 @@ def predict_url(url: str):
     legit_pct = round(float(probabilities[1]) * 100, 2)
     sev = get_risk_severity(phish_pct, is_trusted=False)
 
+    tier_desc = "Evaluated against 18 structural and lexical URL features using 100 decision trees."
+    if is_domain_listed:
+        if not is_https:
+            tier_desc = "Authority host dropped to Tier 3 ML due to insecure unencrypted HTTP protocol."
+        elif has_obf:
+            tier_desc = "Authority host dropped to Tier 3 ML due to detected character/hex obfuscation."
+        elif deep_sub:
+            tier_desc = "Authority host dropped to Tier 3 ML due to deep nested subdomain anomalies."
+        elif digit_padding:
+            tier_desc = "Authority host dropped to Tier 3 ML due to excessive numerical token padding."
+
     return {
         "result": result,
         "phishing_probability": phish_pct,
         "legitimate_probability": legit_pct,
         "impersonation_warning": None,
         "defense_tier": "Tier 3: Random Forest Classifier",
-        "defense_tier_description": "Evaluated against 18 structural and lexical URL features using 100 decision trees.",
+        "defense_tier_description": tier_desc,
         "insights": get_feature_insights(extracted, is_trusted=False),
         "raw_features": raw_features,
         "risk_severity": sev["level"],

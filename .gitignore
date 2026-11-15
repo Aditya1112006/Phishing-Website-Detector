@@ -51,4 +51,7 @@ Thumbs.db
 *.tmp
 desktop.ini
 
+# Project Internal Documentation & Reports
+PROJECT_DOCUMENTATION.txt
+
 archive/

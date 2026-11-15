@@ -29,7 +29,6 @@
                     <div class="brand-title-row">
                         <span class="brand-name">PhishGuard</span>
                         <span class="brand-ai-badge">AI</span>
-                        <span class="brand-ver">v2.4 PRO</span>
                     </div>
                     <span class="brand-tagline">Defense-in-Depth Cyber Threat Intelligence Platform</span>
                 </div>
@@ -110,40 +109,39 @@
 
 
         <!-- ============================================================== -->
-        <!-- CORE PLATFORM CARD                                             -->
+        <!-- PLATFORM MODE SELECTOR (FLOATING SEGMENTED NAVIGATION)          -->
         <!-- ============================================================== -->
-        <div class="platform-card">
-
-            <!-- Segmented Modern Tabs Bar -->
-            <nav class="platform-tabs-nav" aria-label="Platform Modes">
-                <button type="button" class="nav-tab-btn active" id="tabScanner">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                    <span>Threat Scanner</span>
-                </button>
-                <button type="button" class="nav-tab-btn" id="tabSim">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M10 2v7.31M14 9.3V1.99M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/>
-                        <path d="M5.52 16h12.96"/>
-                    </svg>
-                    <span>Red-Team Simulator</span>
-                    <span class="pill-spark">What-If</span>
-                </button>
-                <button type="button" class="nav-tab-btn" id="tabBatch">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    <span>Bulk Feed Scan</span>
-                </button>
-                <button type="button" class="nav-tab-btn" id="tabDocs">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                    <span>4-Tier Architecture</span>
-                </button>
-            </nav>
+        <nav class="platform-tabs-nav" aria-label="Platform Modes">
+            <button type="button" class="nav-tab-btn active" id="tabScanner">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <span>Threat Scanner</span>
+            </button>
+            <button type="button" class="nav-tab-btn" id="tabSim">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10 2v7.31M14 9.3V1.99M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/>
+                    <path d="M5.52 16h12.96"/>
+                </svg>
+                <span>Red-Team Simulator</span>
+                <span class="pill-spark">What-If</span>
+            </button>
+            <button type="button" class="nav-tab-btn" id="tabBatch">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>Bulk Feed Scan</span>
+            </button>
+            <button type="button" class="nav-tab-btn" id="tabDocs">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                <span>4-Tier Architecture</span>
+            </button>
+        </nav>
 
 
-            <!-- ========================================================== -->
-            <!-- TAB 1: SINGLE URL SCANNER                                 -->
-            <!-- ========================================================== -->
-            <section id="sectionScanner" class="tab-pane active">
+        <!-- ============================================================== -->
+        <!-- TAB 1: SINGLE URL SCANNER                                     -->
+        <!-- ============================================================== -->
+        <section id="sectionScanner" class="tab-pane active">
 
+            <!-- Dedicated Hero Inspection Console Card -->
+            <div class="scanner-console-card">
                 <div class="scanner-console-header">
                     <div>
                         <h2 class="pane-title">Inspect Destination URL</h2>
@@ -222,12 +220,14 @@
                 </div>
                 {% endif %}
 
+            </div> <!-- /scanner-console-card -->
 
-                <!-- ====================================================== -->
-                <!-- RESULT WORKSPACE (When a scan completes)              -->
-                <!-- ====================================================== -->
-                {% if result %}
-                <div class="result-workspace {{ 'threat-phishing' if result == 'PHISHING' else 'threat-legitimate' }}">
+
+            <!-- ====================================================== -->
+            <!-- RESULT WORKSPACE (When a scan completes)              -->
+            <!-- ====================================================== -->
+            {% if result %}
+            <div class="result-workspace {{ 'threat-phishing' if result == 'PHISHING' else 'threat-legitimate' }}">
 
                     <!-- Executive Verdict Card -->
                     <div class="verdict-card">
@@ -342,7 +342,6 @@
                                     <p class="syntax-subtitle">Visual tokenization and protocol-level feature decomposition</p>
                                 </div>
                             </div>
-                            <span class="syntax-badge">Lexical Parser v2.4</span>
                         </div>
 
                         <!-- Deconstructed Token Strip -->
@@ -442,177 +441,180 @@
                     {% endif %}
 
 
-                    <!-- Active Defense Pipeline Step Tracer -->
-                    <div class="pipeline-tracer-card">
-                        <div class="tracer-header">
-                            <span class="tracer-title">4-Tier Defense Execution Route:</span>
-                            <span class="tracer-active-indicator">Processed in &lt; 0.4ms</span>
-                        </div>
-                        <div class="pipeline-steps">
-                            <div class="pipe-step {{ 'step-engaged' if defense_tier and 'Tier 1' in defense_tier else 'step-pass' }}">
-                                <div class="step-icon">1</div>
-                                <div class="step-info">
-                                    <span class="step-name">Tier 1: Authority Allowlist</span>
-                                    <span class="step-status">{{ 'MATCHED & VERIFIED' if defense_tier and 'Tier 1' in defense_tier else 'Checked & Passed' }}</span>
+                    <!-- Dual-Column Cyber Analytics Grid -->
+                    <div class="analytics-grid">
+                        <div class="analytics-col">
+                            <!-- Active Defense Pipeline Step Tracer -->
+                            <div class="pipeline-tracer-card">
+                                <div class="tracer-header">
+                                    <span class="tracer-title">4-Tier Defense Execution Route:</span>
+                                    <span class="tracer-active-indicator">Processed in &lt; 0.4ms</span>
                                 </div>
-                            </div>
+                                <div class="pipeline-steps">
+                                    <div class="pipe-step {{ 'step-engaged' if defense_tier and 'Tier 1' in defense_tier else 'step-pass' }}">
+                                        <div class="step-icon">1</div>
+                                        <div class="step-info">
+                                            <span class="step-name">Tier 1: Authority Allowlist</span>
+                                            <span class="step-status">{{ 'MATCHED & VERIFIED' if defense_tier and 'Tier 1' in defense_tier else 'Checked & Passed' }}</span>
+                                        </div>
+                                    </div>
 
-                            <div class="pipe-step {{ 'step-engaged threat-step' if defense_tier and 'Tier 2' in defense_tier else 'step-pass' }}">
-                                <div class="step-icon">2</div>
-                                <div class="step-info">
-                                    <span class="step-name">Tier 2: Brand Engine</span>
-                                    <span class="step-status">{{ 'SPOOFING DETECTED' if defense_tier and 'Tier 2' in defense_tier else 'Clean / Passed' }}</span>
+                                    <div class="pipe-step {{ 'step-engaged threat-step' if defense_tier and 'Tier 2' in defense_tier else 'step-pass' }}">
+                                        <div class="step-icon">2</div>
+                                        <div class="step-info">
+                                            <span class="step-name">Tier 2: Brand Engine</span>
+                                            <span class="step-status">{{ 'SPOOFING DETECTED' if defense_tier and 'Tier 2' in defense_tier else 'Clean / Passed' }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="pipe-step {{ 'step-engaged' if defense_tier and 'Tier 3' in defense_tier else 'step-pass' }}">
+                                        <div class="step-icon">3</div>
+                                        <div class="step-info">
+                                            <span class="step-name">Tier 3: Random Forest</span>
+                                            <span class="step-status">{{ 'CLASSIFIED (100 TREES)' if defense_tier and 'Tier 3' in defense_tier else 'Standby' }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="pipe-step step-engaged">
+                                        <div class="step-icon">4</div>
+                                        <div class="step-info">
+                                            <span class="step-name">Tier 4: Explainable AI</span>
+                                            <span class="step-status">6 Factors Generated</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="pipe-step {{ 'step-engaged' if defense_tier and 'Tier 3' in defense_tier else 'step-pass' }}">
-                                <div class="step-icon">3</div>
-                                <div class="step-info">
-                                    <span class="step-name">Tier 3: Random Forest</span>
-                                    <span class="step-status">{{ 'CLASSIFIED (100 TREES)' if defense_tier and 'Tier 3' in defense_tier else 'Standby' }}</span>
+                                {% if defense_tier %}
+                                <div class="tier-callout-box">
+                                    <span class="callout-icon">🛡️</span>
+                                    <div class="callout-body">
+                                        <strong>Active Defense Layer:</strong> <span class="callout-tier">{{ defense_tier }}</span>
+                                        {% if defense_tier_description %}
+                                        <span class="callout-desc">&bull; {{ defense_tier_description }}</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="pipe-step step-engaged">
-                                <div class="step-icon">4</div>
-                                <div class="step-info">
-                                    <span class="step-name">Tier 4: Explainable AI</span>
-                                    <span class="step-status">6 Factors Generated</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {% if defense_tier %}
-                        <div class="tier-callout-box">
-                            <span class="callout-icon">🛡️</span>
-                            <div class="callout-body">
-                                <strong>Active Defense Layer:</strong> <span class="callout-tier">{{ defense_tier }}</span>
-                                {% if defense_tier_description %}
-                                <span class="callout-desc">&bull; {{ defense_tier_description }}</span>
                                 {% endif %}
                             </div>
-                        </div>
-                        {% endif %}
-                    </div>
 
-
-                    <!-- Brand Impersonation Warning Banner (If Present) -->
-                    {% if impersonation_warning %}
-                    <div class="alert-banner banner-warning">
-                        <span class="banner-icon">⚠️</span>
-                        <div class="banner-body">
-                            <strong>Critical Impersonation Alert:</strong> {{ impersonation_warning }}
-                        </div>
-                    </div>
-                    {% endif %}
-
-
-                    <!-- Probability Comparison Neon Bars -->
-                    <div class="probability-card">
-                        <div class="prob-row">
-                            <div class="prob-labels">
-                                <span class="prob-title color-phishing">Phishing Probability</span>
-                                <span class="prob-percentage font-mono">{{ phishing_probability }}%</span>
-                            </div>
-                            <div class="prob-track">
-                                <div class="prob-bar bar-phishing" data-width="{{ phishing_probability }}"></div>
-                            </div>
-                        </div>
-
-                        <div class="prob-row">
-                            <div class="prob-labels">
-                                <span class="prob-title color-legitimate">Legitimate Probability</span>
-                                <span class="prob-percentage font-mono">{{ legitimate_probability }}%</span>
-                            </div>
-                            <div class="prob-track">
-                                <div class="prob-bar bar-legitimate" data-width="{{ legitimate_probability }}"></div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- Explainable AI (XAI) Factor Cards Grid -->
-                    {% if insights %}
-                    <div class="insights-container">
-                        <div class="insights-header">
-                            <div>
-                                <h4 class="insights-title">Explainable AI (XAI) Inspection Factors</h4>
-                                <p class="insights-subtitle">Transparency into primary lexical, structural, and cryptographic properties of the target URL.</p>
-                            </div>
-                        </div>
-                        <div class="insights-grid">
-                            {% for item in insights %}
-                            <div class="factor-card {{ 'factor-safe' if item.safe else 'factor-risk' }}">
-                                <div class="factor-card-top">
-                                    <span class="factor-name">{{ item.name }}</span>
-                                    <span class="factor-badge {{ 'tag-safe' if item.safe else 'tag-risk' }}">{{ item.badge }}</span>
+                            <!-- Brand Impersonation Warning Banner (If Present) -->
+                            {% if impersonation_warning %}
+                            <div class="alert-banner banner-warning">
+                                <span class="banner-icon">⚠️</span>
+                                <div class="banner-body">
+                                    <strong>Critical Impersonation Alert:</strong> {{ impersonation_warning }}
                                 </div>
-                                <div class="factor-value">{{ item.value }}</div>
                             </div>
-                            {% endfor %}
+                            {% endif %}
+
+                            <!-- Explainable AI (XAI) Factor Cards Grid -->
+                            {% if insights %}
+                            <div class="insights-container">
+                                <div class="insights-header">
+                                    <div>
+                                        <h4 class="insights-title">Explainable AI (XAI) Inspection Factors</h4>
+                                        <p class="insights-subtitle">Transparency into primary lexical, structural, and cryptographic properties of the target URL.</p>
+                                    </div>
+                                </div>
+                                <div class="insights-grid">
+                                    {% for item in insights %}
+                                    <div class="factor-card {{ 'factor-safe' if item.safe else 'factor-risk' }}">
+                                        <div class="factor-card-top">
+                                            <span class="factor-name">{{ item.name }}</span>
+                                            <span class="factor-badge {{ 'tag-safe' if item.safe else 'tag-risk' }}">{{ item.badge }}</span>
+                                        </div>
+                                        <div class="factor-value">{{ item.value }}</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="analytics-col">
+                            <!-- Probability Comparison Neon Bars -->
+                            <div class="probability-card">
+                                <div class="prob-row">
+                                    <div class="prob-labels">
+                                        <span class="prob-title color-phishing">Phishing Probability</span>
+                                        <span class="prob-percentage font-mono">{{ phishing_probability }}%</span>
+                                    </div>
+                                    <div class="prob-track">
+                                        <div class="prob-bar bar-phishing" data-width="{{ phishing_probability }}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="prob-row">
+                                    <div class="prob-labels">
+                                        <span class="prob-title color-legitimate">Legitimate Probability</span>
+                                        <span class="prob-percentage font-mono">{{ legitimate_probability }}%</span>
+                                    </div>
+                                    <div class="prob-track">
+                                        <div class="prob-bar bar-legitimate" data-width="{{ legitimate_probability }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Model Feature Vector Inspector (Collapsible Drawer) -->
+                            {% if raw_features %}
+                            <div class="features-inspector-wrap">
+                                <button type="button" class="btn-features-toggle" id="toggleFeaturesBtn">
+                                    <div class="btn-features-left">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" id="featuresChevron">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                        <span>Inspect Model Input Vector (All 18 Extracted Features)</span>
+                                    </div>
+                                    <span class="features-count-tag">18 Features Ensembled</span>
+                                </button>
+
+                                <div class="features-drawer" id="featuresDrawer" style="display: none;">
+                                    <p class="features-drawer-sub">
+                                        Exact numerical vectors computed by <code>url_features.py</code> and provided directly to the 100 Scikit-Learn Decision Trees during inference.
+                                    </p>
+                                    <div class="table-container">
+                                        <table class="features-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Feature Vector</th>
+                                                    <th>Computed Value</th>
+                                                    <th>Representation</th>
+                                                    <th>Feature Importance (Gini)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for feat_name, feat_val in raw_features.items() %}
+                                                <tr>
+                                                    <td><code>{{ feat_name }}</code></td>
+                                                    <td><span class="val-pill">{{ feat_val }}</span></td>
+                                                    <td class="col-dim">
+                                                        {% if 'Ratio' in feat_name %}Ratio (0.00 – 1.00)
+                                                        {% elif feat_name.startswith('Is') or feat_name.startswith('Has') %}Binary Flag (0 / 1)
+                                                        {% else %}Discrete Count / Length
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if feat_name == 'IsHTTPS' %}<span class="gini-high">40.2% (Decisive)</span>
+                                                        {% elif feat_name == 'NoOfDegitsInURL' %}<span class="gini-high">12.5% (High)</span>
+                                                        {% elif feat_name == 'DomainLength' %}<span class="gini-high">10.5% (High)</span>
+                                                        {% elif feat_name == 'URLLength' %}<span class="gini-high">9.9% (High)</span>
+                                                        {% elif feat_name == 'DigitRatioInURL' %}<span class="gini-high">8.1% (High)</span>
+                                                        {% elif feat_name == 'NoOfLettersInURL' %}<span class="gini-med">5.9% (Medium)</span>
+                                                        {% elif feat_name == 'LetterRatioInURL' %}<span class="gini-med">4.7% (Medium)</span>
+                                                        {% elif feat_name == 'NoOfSubDomain' %}<span class="gini-med">3.0% (Medium)</span>
+                                                        {% else %}<span class="gini-low">&lt; 2.5% (Supporting)</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endif %}
-
-
-                    <!-- Model Feature Vector Inspector (Collapsible Drawer) -->
-                    {% if raw_features %}
-                    <div class="features-inspector-wrap">
-                        <button type="button" class="btn-features-toggle" id="toggleFeaturesBtn">
-                            <div class="btn-features-left">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" id="featuresChevron">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                                <span>Inspect Model Input Vector (All 18 Extracted Features)</span>
-                            </div>
-                            <span class="features-count-tag">18 Features Ensembled</span>
-                        </button>
-
-                        <div class="features-drawer" id="featuresDrawer" style="display: none;">
-                            <p class="features-drawer-sub">
-                                Exact numerical vectors computed by <code>url_features.py</code> and provided directly to the 100 Scikit-Learn Decision Trees during inference.
-                            </p>
-                            <div class="table-container">
-                                <table class="features-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Feature Vector</th>
-                                            <th>Computed Value</th>
-                                            <th>Representation</th>
-                                            <th>Feature Importance (Gini)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for feat_name, feat_val in raw_features.items() %}
-                                        <tr>
-                                            <td><code>{{ feat_name }}</code></td>
-                                            <td><span class="val-pill">{{ feat_val }}</span></td>
-                                            <td class="col-dim">
-                                                {% if 'Ratio' in feat_name %}Ratio (0.00 – 1.00)
-                                                {% elif feat_name.startswith('Is') or feat_name.startswith('Has') %}Binary Flag (0 / 1)
-                                                {% else %}Discrete Count / Length
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if feat_name == 'IsHTTPS' %}<span class="gini-high">40.2% (Decisive)</span>
-                                                {% elif feat_name == 'NoOfDegitsInURL' %}<span class="gini-high">12.5% (High)</span>
-                                                {% elif feat_name == 'DomainLength' %}<span class="gini-high">10.5% (High)</span>
-                                                {% elif feat_name == 'URLLength' %}<span class="gini-high">9.9% (High)</span>
-                                                {% elif feat_name == 'DigitRatioInURL' %}<span class="gini-high">8.1% (High)</span>
-                                                {% elif feat_name == 'NoOfLettersInURL' %}<span class="gini-med">5.9% (Medium)</span>
-                                                {% elif feat_name == 'LetterRatioInURL' %}<span class="gini-med">4.7% (Medium)</span>
-                                                {% elif feat_name == 'NoOfSubDomain' %}<span class="gini-med">3.0% (Medium)</span>
-                                                {% else %}<span class="gini-low">&lt; 2.5% (Supporting)</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
 
                 </div>
                 {% endif %}
@@ -653,191 +655,220 @@
                         </p>
                     </div>
 
-                    <!-- Target Domain Selector & Presets -->
-                    <div class="sim-config-card">
-                        <div class="sim-field-group">
-                            <div class="sim-field-label-row">
-                                <label for="simBaseDomain" class="sim-label">1. Select Target Base Domain (Clean Starting Point):</label>
-                                <span class="sim-note">Allowlist verified vs unlisted domains</span>
-                            </div>
-                            <div class="sim-select-wrapper">
-                                <select id="simBaseDomain" class="sim-select">
-                                    <option value="paypal.com" data-brand="paypal" selected>paypal.com (Official PayPal — High-Value Financial Target)</option>
-                                    <option value="google.com" data-brand="google">google.com (Official Google — Identity & Search Authority)</option>
-                                    <option value="wikipedia.org" data-brand="">wikipedia.org (Official Wikipedia — High-Reputation Knowledge Base)</option>
-                                    <option value="netflix.com" data-brand="netflix">netflix.com (Official Netflix — Streaming & Billing Target)</option>
-                                    <option value="apple.com" data-brand="apple">apple.com (Official Apple — Apple ID & iCloud Auth)</option>
-                                    <option value="microsoft.com" data-brand="microsoft">microsoft.com (Official Microsoft — Enterprise Portal)</option>
-                                    <option value="example-portal.com" data-brand="">example-portal.com (Unlisted Standard Domain — No Allowlist Bypass)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- 6 Cyber Attack Vector Toggles -->
-                        <div class="sim-toggles-header-row">
-                            <span class="sim-label">2. Adversarial Evasion Modifiers (Red-Team Vectors):</span>
-                            <button type="button" class="btn-reset-vectors" id="simResetBtn">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                                    <path d="M3 3v5h5"/>
-                                </svg>
-                                Reset All Vectors
-                            </button>
-                        </div>
-
-                        <div class="sim-vectors-grid">
-                            <!-- Toggle 1: Strip HTTPS -->
-                            <div class="vector-card" id="cardToggleHttp">
-                                <div class="vector-card-top">
-                                    <div class="vector-title-group">
-                                        <span class="vector-idx">01</span>
-                                        <span class="vector-name">Strip HTTPS (Insecure HTTP)</span>
+                    <div class="sim-layout-grid">
+                        <div class="sim-controls-col">
+                            <!-- Target Domain Selector & Presets -->
+                            <div class="sim-config-card">
+                                <div class="sim-field-group">
+                                    <div class="sim-field-label-row">
+                                        <label for="simBaseDomain" class="sim-label">1. Select Target Base Domain (Clean Starting Point):</label>
+                                        <span class="sim-note">Allowlist verified vs unlisted domains</span>
                                     </div>
-                                    <label class="cyber-switch">
-                                        <input type="checkbox" id="simToggleHttp">
-                                        <span class="switch-track"></span>
-                                    </label>
-                                </div>
-                                <p class="vector-desc">Downgrades TLS/SSL encryption to cleartext HTTP protocol.</p>
-                                <span class="vector-pill">Gini Decider (40.2%): IsHTTPS</span>
-                            </div>
-
-                            <!-- Toggle 2: Brand Typosquatting -->
-                            <div class="vector-card" id="cardToggleSpoof">
-                                <div class="vector-card-top">
-                                    <div class="vector-title-group">
-                                        <span class="vector-idx">02</span>
-                                        <span class="vector-name">Brand Typosquatting / Spoofing</span>
+                                    <div class="sim-select-wrapper">
+                                        <select id="simBaseDomain" class="sim-select">
+                                            <option value="paypal.com" data-brand="paypal" selected>paypal.com (Official PayPal — High-Value Financial Target)</option>
+                                            <option value="shooliniuniversity.com" data-brand="shoolini">shooliniuniversity.com (Official Campus Portal — High-Reputation Authority)</option>
+                                            <option value="google.com" data-brand="google">google.com (Official Google — Identity & Search Authority)</option>
+                                            <option value="wikipedia.org" data-brand="wikipedia">wikipedia.org (Official Wikipedia — High-Reputation Knowledge Base)</option>
+                                            <option value="netflix.com" data-brand="netflix">netflix.com (Official Netflix — Streaming & Billing Target)</option>
+                                            <option value="apple.com" data-brand="apple">apple.com (Official Apple — Apple ID & iCloud Auth)</option>
+                                            <option value="microsoft.com" data-brand="microsoft">microsoft.com (Official Microsoft — Enterprise Portal)</option>
+                                            <option value="example-portal.com" data-brand="">example-portal.com (Unlisted Standard Domain — No Allowlist Bypass)</option>
+                                        </select>
                                     </div>
-                                    <label class="cyber-switch">
-                                        <input type="checkbox" id="simToggleSpoof">
-                                        <span class="switch-track"></span>
-                                    </label>
                                 </div>
-                                <p class="vector-desc">Appends lookalike brand keywords (e.g. <code>-security-verify.xyz</code>).</p>
-                                <span class="vector-pill">Triggers Tier 2: Brand Engine</span>
-                            </div>
 
-                            <!-- Toggle 3: Raw IP Hostname -->
-                            <div class="vector-card" id="cardToggleIp">
-                                <div class="vector-card-top">
-                                    <div class="vector-title-group">
-                                        <span class="vector-idx">03</span>
-                                        <span class="vector-name">Raw IP Address Hostname</span>
+                                <!-- 6 Cyber Attack Vector Toggles -->
+                                <div class="sim-toggles-header-row">
+                                    <span class="sim-label">2. Adversarial Evasion Modifiers (Red-Team Vectors):</span>
+                                    <button type="button" class="btn-reset-vectors" id="simResetBtn">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                            <path d="M3 3v5h5"/>
+                                        </svg>
+                                        Reset All Vectors
+                                    </button>
+                                </div>
+
+                                <div class="sim-vectors-grid">
+                                    <!-- Toggle 1: Strip HTTPS -->
+                                    <div class="vector-card" id="cardToggleHttp">
+                                        <div class="vector-card-top">
+                                            <div class="vector-title-group">
+                                                <span class="vector-idx">01</span>
+                                                <span class="vector-name">Strip HTTPS (Insecure HTTP)</span>
+                                            </div>
+                                            <label class="cyber-switch">
+                                                <input type="checkbox" id="simToggleHttp">
+                                                <span class="switch-track"></span>
+                                            </label>
+                                        </div>
+                                        <p class="vector-desc">Downgrades TLS/SSL encryption to cleartext HTTP protocol.</p>
+                                        <span class="vector-pill">Gini Decider (40.2%): IsHTTPS</span>
                                     </div>
-                                    <label class="cyber-switch">
-                                        <input type="checkbox" id="simToggleIp">
-                                        <span class="switch-track"></span>
-                                    </label>
-                                </div>
-                                <p class="vector-desc">Replaces domain name with raw dotted quad IP (<code>192.168.1.104</code>).</p>
-                                <span class="vector-pill">IsDomainIP & Numeric Spikes</span>
-                            </div>
 
-                            <!-- Toggle 4: Hex Obfuscation -->
-                            <div class="vector-card" id="cardToggleHex">
-                                <div class="vector-card-top">
-                                    <div class="vector-title-group">
-                                        <span class="vector-idx">04</span>
-                                        <span class="vector-name">Hex / Percent Encoding</span>
+                                    <!-- Toggle 2: Brand Typosquatting -->
+                                    <div class="vector-card" id="cardToggleSpoof">
+                                        <div class="vector-card-top">
+                                            <div class="vector-title-group">
+                                                <span class="vector-idx">02</span>
+                                                <span class="vector-name">Brand Typosquatting / Spoofing</span>
+                                            </div>
+                                            <label class="cyber-switch">
+                                                <input type="checkbox" id="simToggleSpoof">
+                                                <span class="switch-track"></span>
+                                            </label>
+                                        </div>
+                                        <p class="vector-desc">Appends lookalike brand keywords (e.g. <code>-security-verify.xyz</code>).</p>
+                                        <span class="vector-pill">Triggers Tier 2: Brand Engine</span>
                                     </div>
-                                    <label class="cyber-switch">
-                                        <input type="checkbox" id="simToggleHex">
-                                        <span class="switch-track"></span>
-                                    </label>
-                                </div>
-                                <p class="vector-desc">Masks path tokens using percent-encoded hex sequences (<code>%20%2F%3D%40</code>).</p>
-                                <span class="vector-pill">HasObfuscation & Special Chars</span>
-                            </div>
 
-                            <!-- Toggle 5: Deep Subdomain Hijack -->
-                            <div class="vector-card" id="cardToggleSubdomain">
-                                <div class="vector-card-top">
-                                    <div class="vector-title-group">
-                                        <span class="vector-idx">05</span>
-                                        <span class="vector-name">Deep Subdomain Hijack</span>
+                                    <!-- Toggle 3: Raw IP Hostname -->
+                                    <div class="vector-card" id="cardToggleIp">
+                                        <div class="vector-card-top">
+                                            <div class="vector-title-group">
+                                                <span class="vector-idx">03</span>
+                                                <span class="vector-name">Raw IP Address Hostname</span>
+                                            </div>
+                                            <label class="cyber-switch">
+                                                <input type="checkbox" id="simToggleIp">
+                                                <span class="switch-track"></span>
+                                            </label>
+                                        </div>
+                                        <p class="vector-desc">Replaces domain name with raw dotted quad IP (<code>192.168.1.104</code>).</p>
+                                        <span class="vector-pill">IsDomainIP & Numeric Spikes</span>
                                     </div>
-                                    <label class="cyber-switch">
-                                        <input type="checkbox" id="simToggleSubdomain">
-                                        <span class="switch-track"></span>
-                                    </label>
-                                </div>
-                                <p class="vector-desc">Chains nested subdomains (<code>login.verify.account.auth...</code>).</p>
-                                <span class="vector-pill">NoOfSubDomain (Depth Spike)</span>
-                            </div>
 
-                            <!-- Toggle 6: Excessive Query Padding -->
-                            <div class="vector-card" id="cardToggleQuery">
-                                <div class="vector-card-top">
-                                    <div class="vector-title-group">
-                                        <span class="vector-idx">06</span>
-                                        <span class="vector-name">Excessive Query Token Padding</span>
+                                    <!-- Toggle 4: Hex Obfuscation -->
+                                    <div class="vector-card" id="cardToggleHex">
+                                        <div class="vector-card-top">
+                                            <div class="vector-title-group">
+                                                <span class="vector-idx">04</span>
+                                                <span class="vector-name">Hex / Percent Encoding</span>
+                                            </div>
+                                            <label class="cyber-switch">
+                                                <input type="checkbox" id="simToggleHex">
+                                                <span class="switch-track"></span>
+                                            </label>
+                                        </div>
+                                        <p class="vector-desc">Masks path tokens using percent-encoded hex sequences (<code>%20%2F%3D%40</code>).</p>
+                                        <span class="vector-pill">HasObfuscation & Special Chars</span>
                                     </div>
-                                    <label class="cyber-switch">
-                                        <input type="checkbox" id="simToggleQuery">
-                                        <span class="switch-track"></span>
-                                    </label>
-                                </div>
-                                <p class="vector-desc">Pads total length with fake session hashes, numbers, and symbols.</p>
-                                <span class="vector-pill">URLLength & DigitRatio</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Live Generated Mutating URL Box -->
-                    <div class="sim-url-preview-card">
-                        <div class="sim-preview-header">
-                            <span class="preview-tag">Live Mutated Adversarial URL:</span>
-                            <div class="preview-actions">
-                                <button type="button" class="btn-sim-action" id="simCopyBtn" title="Copy to clipboard">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
-                                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
-                                    </svg>
-                                    <span id="simCopyText">Copy URL</span>
-                                </button>
-                                <button type="button" class="btn-sim-action action-accent" id="simTestInMainBtn" title="Analyze this adversarial URL in Threat Scanner">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                                    </svg>
-                                    <span>Test in Main Scanner</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="sim-url-terminal" id="simLiveUrl">https://www.paypal.com</div>
-                    </div>
+                                    <!-- Toggle 5: Deep Subdomain Hijack -->
+                                    <div class="vector-card" id="cardToggleSubdomain">
+                                        <div class="vector-card-top">
+                                            <div class="vector-title-group">
+                                                <span class="vector-idx">05</span>
+                                                <span class="vector-name">Deep Subdomain Hijack</span>
+                                            </div>
+                                            <label class="cyber-switch">
+                                                <input type="checkbox" id="simToggleSubdomain">
+                                                <span class="switch-track"></span>
+                                            </label>
+                                        </div>
+                                        <p class="vector-desc">Chains nested subdomains (<code>login.verify.account.auth...</code>).</p>
+                                        <span class="vector-pill">NoOfSubDomain (Depth Spike)</span>
+                                    </div>
 
-                    <!-- Live Real-Time Defense Diagnostics -->
-                    <div class="sim-diagnostics-card" id="simEvalCard">
-                        <div class="diagnostics-top">
-                            <div class="diag-verdict-cluster">
-                                <span class="diag-shield-icon" id="simEvalIcon">✅</span>
-                                <div>
-                                    <div class="diag-sub">Real-Time Defense Classification</div>
-                                    <div class="diag-badge badge-clean" id="simEvalBadge">LEGITIMATE</div>
+                                    <!-- Toggle 6: Excessive Query Padding -->
+                                    <div class="vector-card" id="cardToggleQuery">
+                                        <div class="vector-card-top">
+                                            <div class="vector-title-group">
+                                                <span class="vector-idx">06</span>
+                                                <span class="vector-name">Excessive Query Token Padding</span>
+                                            </div>
+                                            <label class="cyber-switch">
+                                                <input type="checkbox" id="simToggleQuery">
+                                                <span class="switch-track"></span>
+                                            </label>
+                                        </div>
+                                        <p class="vector-desc">Pads total length with fake session hashes, numbers, and symbols.</p>
+                                        <span class="vector-pill">URLLength & DigitRatio</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="diag-score-cluster">
-                                <span class="diag-score-num color-legitimate font-mono" id="simEvalScore">0.01%</span>
-                                <span class="diag-score-sub" id="simEvalScoreSub">Phishing Threat Risk</span>
                             </div>
                         </div>
 
-                        <!-- Live Threat Risk Meter -->
-                        <div class="diag-meter-track">
-                            <div class="diag-meter-fill meter-legit" id="simMeterBar" style="width: 1%;"></div>
-                        </div>
+                        <div class="sim-preview-col">
+                            <!-- Live Generated Mutating URL Box -->
+                            <div class="sim-url-preview-card">
+                                <div class="sim-preview-header">
+                                    <span class="preview-tag">Live Mutated Adversarial URL:</span>
+                                    <div class="preview-actions">
+                                        <button type="button" class="btn-sim-action" id="simCopyBtn" title="Copy to clipboard">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                                            </svg>
+                                            <span id="simCopyText">Copy URL</span>
+                                        </button>
+                                        <button type="button" class="btn-sim-action action-accent" id="simTestInMainBtn" title="Analyze this adversarial URL in Threat Scanner">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                                            </svg>
+                                            <span>Test in Main Scanner</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="sim-url-terminal" id="simLiveUrl">https://www.paypal.com</div>
+                            </div>
 
-                        <!-- Active Defense Tier Activated Banner -->
-                        <div class="diag-tier-box" id="simTierBox">
-                            <div class="diag-tier-badge" id="simTierBadge">Tier 1: Authority Allowlist</div>
-                            <p class="diag-tier-desc" id="simTierDesc">Verified official domain. Bypasses false-positive shortcut heuristics with zero latency.</p>
-                        </div>
+                            <!-- Live Real-Time Defense Diagnostics -->
+                            <div class="sim-diagnostics-card" id="simEvalCard">
+                                <div class="diagnostics-top">
+                                    <div class="diag-verdict-cluster">
+                                        <span class="diag-shield-icon" id="simEvalIcon">✅</span>
+                                        <div>
+                                            <div class="diag-sub">Real-Time Defense Classification</div>
+                                            <div class="diag-badge badge-clean" id="simEvalBadge">LEGITIMATE</div>
+                                        </div>
+                                    </div>
+                                    <div class="diag-score-cluster">
+                                        <span class="diag-score-num color-legitimate font-mono" id="simEvalScore">0.01%</span>
+                                        <span class="diag-score-sub" id="simEvalScoreSub">Phishing Threat Risk</span>
+                                    </div>
+                                </div>
 
-                        <!-- Live Extracted Signal Indicators Checklist -->
-                        <div class="diag-signals-wrap">
-                            <div class="diag-signals-header">Live Extracted Signal Indicators:</div>
-                            <div class="diag-signals-list" id="simSignalsList"></div>
+                                <!-- Live Threat Risk Meter -->
+                                <div class="diag-meter-track">
+                                    <div class="diag-meter-fill meter-legit" id="simMeterBar" style="width: 2%;"></div>
+                                </div>
+
+                                <!-- Dual Mini-Bars: Comparative Risk vs Trust -->
+                                <div class="sim-prob-split-row">
+                                    <div class="sim-prob-split-col">
+                                        <div class="sim-prob-split-labels">
+                                            <span class="color-phishing font-bold">Threat Risk</span>
+                                            <span class="font-mono color-phishing font-bold" id="simProbPhishNum">0.01%</span>
+                                        </div>
+                                        <div class="sim-mini-track">
+                                            <div class="sim-mini-bar bar-phish" id="simProbPhishBar" style="width: 2%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="sim-prob-split-col">
+                                        <div class="sim-prob-split-labels">
+                                            <span class="color-legitimate font-bold">Trust Confidence</span>
+                                            <span class="font-mono color-legitimate font-bold" id="simProbLegitNum">99.99%</span>
+                                        </div>
+                                        <div class="sim-mini-track">
+                                            <div class="sim-mini-bar bar-legit" id="simProbLegitBar" style="width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Active Defense Tier Activated Banner -->
+                                <div class="diag-tier-box" id="simTierBox">
+                                    <div class="diag-tier-badge" id="simTierBadge">Tier 1: Authority Allowlist</div>
+                                    <p class="diag-tier-desc" id="simTierDesc">Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed.</p>
+                                </div>
+
+                                <!-- Live Extracted Signal Indicators Checklist -->
+                                <div class="diag-signals-wrap">
+                                    <div class="diag-signals-header">Live Extracted Signal Indicators:</div>
+                                    <div class="diag-signals-list" id="simSignalsList"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -986,8 +1017,6 @@
                 </div>
             </section>
 
-        </div>
-
     </main>
 
 
@@ -998,8 +1027,6 @@
         <div class="footer-inner">
             <div class="footer-left">
                 <span class="footer-brand">PhishGuard AI</span>
-                <span class="footer-bullet">&bull;</span>
-                <span class="footer-text">B.Tech Computer Science & Engineering (Artificial Intelligence) Capstone Project</span>
             </div>
             <div class="footer-right">
                 <span class="footer-citation">Dataset: PhiUSIIL Phishing Benchmark (235,370 URLs)</span>
@@ -1054,7 +1081,7 @@
                 <!-- Classical ML Benchmark Arena (Comparative Evaluation) -->
                 <div class="modal-sec-title">Classical ML Algorithm Arena (Comparative Benchmark on 235,370 Samples)</div>
                 <p class="arena-subtitle-desc">
-                    Rigorous empirical evaluation of 5 classical supervised machine learning algorithms trained and tested under an identical 80/20 train-test partition on the PhiUSIIL dataset.
+                    Rigorous empirical evaluation of 4 classical supervised machine learning algorithms trained and tested under an identical 80/20 train-test partition on the PhiUSIIL dataset.
                 </p>
 
                 <div class="arena-table-wrap">
@@ -1132,21 +1159,6 @@
                                 <td><span class="arena-badge badge-bias">High Bias</span></td>
                                 <td class="arena-rationale">Assumes monotonic log-odds; struggles when individual features are ambiguous but their conjunction is malicious.</td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <div class="arena-model-cell">
-                                        <span class="arena-model-name">Gaussian Naive Bayes</span>
-                                        <span class="arena-model-family">Probabilistic Classifier</span>
-                                    </div>
-                                </td>
-                                <td><span class="arena-num">84.60%</span></td>
-                                <td><span class="arena-num">82.30%</span></td>
-                                <td><span class="arena-num">87.90%</span></td>
-                                <td><span class="arena-num">85.01%</span></td>
-                                <td><span class="arena-num">&lt; 0.1ms</span></td>
-                                <td><span class="arena-badge badge-violated">Independence Fail</span></td>
-                                <td class="arena-rationale">Violates conditional independence assumption due to strong co-dependence between URL length and digit counts.</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -1176,11 +1188,6 @@
                                 <div class="spectrum-track"><div class="spectrum-fill" style="width: 89.20%;"></div></div>
                                 <span class="spectrum-val">89.20%</span>
                             </div>
-                            <div class="spectrum-bar-row">
-                                <span class="spectrum-label">Naive Bayes</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 84.60%;"></div></div>
-                                <span class="spectrum-val">84.60%</span>
-                            </div>
                         </div>
                     </div>
 
@@ -1207,11 +1214,6 @@
                                 <div class="spectrum-track"><div class="spectrum-fill" style="width: 89.29%;"></div></div>
                                 <span class="spectrum-val">89.29%</span>
                             </div>
-                            <div class="spectrum-bar-row">
-                                <span class="spectrum-label">Naive Bayes</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 85.01%;"></div></div>
-                                <span class="spectrum-val">85.01%</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1224,7 +1226,7 @@
                     <div class="arena-theorem-body">
                         In classical learning theory, an ensemble of <em>M = 100</em> bagged trees each with variance &sigma;&sup2; and mean pairwise correlation &rho; yields total variance:  
                         <code>Var(f&#772;) = &rho;&sigma;&sup2; + ((1 - &rho;) / M)&sigma;&sup2;</code>.  
-                        By injecting random feature subspace selection at every decision split (&radic;<em>p</em> &asymp; 4 features per node), correlation &rho; is minimized. This drives variance down toward the theoretical lower bound without inflating bias—delivering a <strong>+1.74% to +14.94%</strong> performance gain over solitary estimators.
+                        By injecting random feature subspace selection at every decision split (&radic;<em>p</em> &asymp; 4 features per node), correlation &rho; is minimized. This drives variance down toward the theoretical lower bound without inflating bias—delivering a <strong>+1.74% to +10.34%</strong> performance gain over solitary estimators.
                     </div>
                 </div>
 
@@ -1330,8 +1332,6 @@
     }
     </script>
     {% endif %}
-        </div>
-    </div>
 
 
     <!-- ================================================================== -->
@@ -1777,6 +1777,10 @@
             var simEvalScore = document.getElementById("simEvalScore");
             var simEvalScoreSub = document.getElementById("simEvalScoreSub");
             var simMeterBar = document.getElementById("simMeterBar");
+            var simProbPhishNum = document.getElementById("simProbPhishNum");
+            var simProbPhishBar = document.getElementById("simProbPhishBar");
+            var simProbLegitNum = document.getElementById("simProbLegitNum");
+            var simProbLegitBar = document.getElementById("simProbLegitBar");
             var simTierBadge = document.getElementById("simTierBadge");
             var simTierDesc = document.getElementById("simTierDesc");
             var simSignalsList = document.getElementById("simSignalsList");
@@ -1802,11 +1806,14 @@
 
                 var scheme = isHttp ? "http://" : "https://";
                 var host = "";
+                var path = "";
 
                 if (isIp) {
                     host = "192.168.1.104";
+                    path = isSpoof ? ("/" + brand + "-security/login.php") : "/login.php";
                 } else if (isSpoof) {
                     host = brand + "-security-account-verify.xyz";
+                    path = "/login.php";
                 } else {
                     host = "www." + domain;
                 }
@@ -1815,11 +1822,8 @@
                     host = "secure.login.verify.account." + host;
                 }
 
-                var path = "";
                 if (isHex) {
-                    path = "/auth%20session%2Fverification%3D%40token";
-                } else if (isSpoof || isIp) {
-                    path = "/login.php";
+                    path = (path ? path : "") + "/auth%20session%2Fverification%3D%40token";
                 }
 
                 var query = "";
@@ -1836,7 +1840,7 @@
                 var url = buildSimUrl();
                 if (simLiveUrl) simLiveUrl.textContent = url;
 
-                // Toggle card visual activation
+                // Sync card active styles immediately
                 var toggles = [
                     { id: "cardToggleHttp", el: simToggleHttp },
                     { id: "cardToggleSpoof", el: simToggleSpoof },
@@ -1865,23 +1869,30 @@
                         if (data.status !== "success") return;
 
                         var isPhish = data.result === "PHISHING";
+                        var phishProb = Number(data.phishing_probability) || 0;
+                        var legitProb = Number(data.legitimate_probability) || 0;
+
                         if (simEvalIcon) simEvalIcon.textContent = isPhish ? "🚨" : "✅";
                         if (simEvalBadge) {
                             simEvalBadge.textContent = data.result;
                             simEvalBadge.className = "diag-badge " + (isPhish ? "badge-threat" : "badge-clean");
                         }
                         if (simEvalScore) {
-                            simEvalScore.textContent = (isPhish ? data.phishing_probability : data.legitimate_probability) + "%";
+                            simEvalScore.textContent = phishProb.toFixed(2) + "%";
                             simEvalScore.className = "diag-score-num font-mono " + (isPhish ? "color-phishing" : "color-legitimate");
                         }
                         if (simEvalScoreSub) {
-                            simEvalScoreSub.textContent = isPhish ? "Phishing Threat Risk" : "Legitimate Confidence";
+                            simEvalScoreSub.textContent = isPhish ? "Threat Risk Score (Critical Hazard)" : "Threat Risk Score (Verified Clean)";
                         }
                         if (simMeterBar) {
-                            var pct = isPhish ? data.phishing_probability : (100 - data.legitimate_probability);
-                            simMeterBar.style.width = Math.max(3, pct) + "%";
+                            simMeterBar.style.width = Math.max(2, Math.min(100, phishProb)) + "%";
                             simMeterBar.className = "diag-meter-fill " + (isPhish ? "meter-phish" : "meter-legit");
                         }
+
+                        if (simProbPhishNum) simProbPhishNum.textContent = phishProb.toFixed(2) + "%";
+                        if (simProbPhishBar) simProbPhishBar.style.width = Math.max(2, Math.min(100, phishProb)) + "%";
+                        if (simProbLegitNum) simProbLegitNum.textContent = legitProb.toFixed(2) + "%";
+                        if (simProbLegitBar) simProbLegitBar.style.width = Math.max(2, Math.min(100, legitProb)) + "%";
 
                         if (simTierBadge) {
                             simTierBadge.textContent = data.defense_tier || "Defense Evaluation";
@@ -1904,14 +1915,31 @@
                         }
                     })
                     .catch(function() {});
-                }, 80);
+                }, 25);
             }
+
+            // Enable clicking anywhere on vector card to toggle
+            document.querySelectorAll(".vector-card").forEach(function(card) {
+                card.addEventListener("click", function(e) {
+                    if (e.target.tagName === "INPUT" || e.target.closest(".cyber-switch")) {
+                        return;
+                    }
+                    var cb = card.querySelector('input[type="checkbox"]');
+                    if (cb) {
+                        cb.checked = !cb.checked;
+                        cb.dispatchEvent(new Event("change", { bubbles: true }));
+                    }
+                });
+            });
 
             // Bind change events
             var allSimInputs = [simBaseDomain, simToggleHttp, simToggleSpoof, simToggleIp, simToggleHex, simToggleSubdomain, simToggleQuery];
             allSimInputs.forEach(function(elem) {
                 if (elem) elem.addEventListener("change", runSimEvaluation);
             });
+
+            // Initialize simulator right away
+            runSimEvaluation();
 
             // Reset button
             if (simResetBtn) {

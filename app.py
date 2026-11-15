@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, jsonify
-from predictor import predict_url
+from predictor import predict_url, is_valid_url_format
 
 app = Flask(__name__)
 
@@ -13,11 +13,19 @@ def home():
 def predict():
     url = request.form.get("url", "").strip()
 
-    # Guard: empty input
+    # Guard 1: empty input
     if not url:
         return render_template(
             "index.html",
-            error="Please enter a URL."
+            error="Please enter a destination URL."
+        )
+
+    # Guard 2: validate URL format (reject plain conversational text, sentences, spaces)
+    if not is_valid_url_format(url):
+        return render_template(
+            "index.html",
+            url=url,
+            error=f"Invalid URL Format: '{url}' is plain text, not a valid web URL or domain name. Real URLs cannot contain spaces and must be valid web destinations (e.g., https://example.com/login or google.com)."
         )
 
     try:
@@ -31,8 +39,21 @@ def predict():
             legitimate_probability=result["legitimate_probability"],
             insights=result.get("insights", []),
             impersonation_warning=result.get("impersonation_warning"),
+            defense_tier=result.get("defense_tier"),
+            defense_tier_description=result.get("defense_tier_description"),
+            raw_features=result.get("raw_features", {}),
+            risk_severity=result.get("risk_severity"),
+            severity_tag_class=result.get("severity_tag_class"),
+            actionable_advisory=result.get("actionable_advisory"),
+            syntax_tokens=result.get("syntax_tokens"),
         )
 
+    except ValueError as ve:
+        return render_template(
+            "index.html",
+            url=url,
+            error=str(ve)
+        )
     except Exception:
         return render_template(
             "index.html",
@@ -59,6 +80,12 @@ def api_predict():
             "message": "URL parameter is required."
         }), 400
 
+    if not is_valid_url_format(url):
+        return jsonify({
+            "status": "error",
+            "message": f"Invalid URL format: '{url}' is not a valid web URL or domain name."
+        }), 400
+
     try:
         result = predict_url(url)
         return jsonify({
@@ -68,7 +95,14 @@ def api_predict():
             "phishing_probability": result["phishing_probability"],
             "legitimate_probability": result["legitimate_probability"],
             "impersonation_warning": result.get("impersonation_warning"),
+            "defense_tier": result.get("defense_tier"),
+            "defense_tier_description": result.get("defense_tier_description"),
             "insights": result.get("insights", []),
+            "raw_features": result.get("raw_features", {}),
+            "risk_severity": result.get("risk_severity"),
+            "severity_tag_class": result.get("severity_tag_class"),
+            "actionable_advisory": result.get("actionable_advisory"),
+            "syntax_tokens": result.get("syntax_tokens"),
         }), 200
 
     except Exception:
@@ -112,6 +146,7 @@ def api_batch_predict():
                 "phishing_probability": pred["phishing_probability"],
                 "legitimate_probability": pred["legitimate_probability"],
                 "impersonation_warning": pred.get("impersonation_warning"),
+                "defense_tier": pred.get("defense_tier"),
                 "status": "success",
             })
         except Exception:

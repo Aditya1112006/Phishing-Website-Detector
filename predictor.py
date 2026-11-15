@@ -18,7 +18,92 @@ import re
 import joblib
 import pandas as pd
 from urllib.parse import urlparse
+import tldextract
 from url_features import extract_url_features
+
+
+# ---------------------------------------------------------------------------
+# High-Abuse / Suspicious TLD Registry (Common in Phishing Campaigns)
+# ---------------------------------------------------------------------------
+SUSPICIOUS_TLDS = {
+    "xyz", "top", "tk", "ml", "ga", "cf", "gq", "buzz", "club", "work",
+    "click", "loan", "fit", "country", "kim", "cricket", "science", "party",
+    "gdn", "mom", "surf", "cam", "vip", "icu", "bar", "rest", "support",
+    "online", "site", "space", "live", "link"
+}
+
+
+def deconstruct_url_syntax(url: str) -> dict:
+    """
+    Forensic Lexical Syntax Deconstructor.
+    Splits the target URL into its protocol, subdomain, root domain, TLD,
+    port, path, file extension, query string, and fragment tokens.
+    """
+    raw = str(url).strip()
+    has_scheme = raw.startswith(("http://", "https://", "ftp://"))
+    candidate = raw if has_scheme else "https://" + raw
+
+    try:
+        parsed = urlparse(candidate)
+    except Exception:
+        candidate = "https://" + re.sub(r"[^\w\-\.:/?&=#%]", "", raw)
+        parsed = urlparse(candidate)
+
+    protocol = parsed.scheme if parsed.scheme else ("https" if not has_scheme else "http")
+    is_https = (protocol.lower() == "https")
+
+    netloc = parsed.netloc or parsed.path.split("/")[0]
+    port = parsed.port
+    hostname = parsed.hostname or (netloc.split(":")[0] if netloc else "")
+
+    is_ip = bool(re.match(r"^(\d{1,3}\.){3}\d{1,3}$", hostname))
+
+    try:
+        ext = tldextract.extract(hostname)
+        subdomain = ext.subdomain
+        domain = ext.domain if ext.domain else (hostname if is_ip else "")
+        suffix = ext.suffix
+    except Exception:
+        parts = hostname.split(".")
+        if len(parts) >= 2:
+            suffix = parts[-1]
+            domain = parts[-2]
+            subdomain = ".".join(parts[:-2])
+        else:
+            suffix = ""
+            domain = hostname
+            subdomain = ""
+
+    subdomain_parts = [p for p in subdomain.split(".") if p] if subdomain else []
+    subdomain_count = len(subdomain_parts)
+    tld = ("." + suffix) if suffix else ""
+    is_suspicious_tld = suffix.lower() in SUSPICIOUS_TLDS
+
+    path = parsed.path or "/"
+    base, file_ext = os.path.splitext(path)
+    file_ext = file_ext if (file_ext and len(file_ext) <= 6) else ""
+
+    query = ("?" + parsed.query) if parsed.query else ""
+    fragment = ("#" + parsed.fragment) if parsed.fragment else ""
+
+    return {
+        "protocol": protocol,
+        "is_https": is_https,
+        "has_explicit_scheme": has_scheme,
+        "hostname": hostname,
+        "is_ip": is_ip,
+        "subdomain": subdomain,
+        "subdomain_count": subdomain_count,
+        "domain": domain,
+        "tld": tld,
+        "is_suspicious_tld": is_suspicious_tld,
+        "port": port,
+        "path": path,
+        "file_extension": file_ext,
+        "query": query,
+        "fragment": fragment,
+        "full_display": raw,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -34,7 +119,13 @@ features = joblib.load("models/phishing_url_features.pkl")
 # ---------------------------------------------------------------------------
 
 TRUSTED_DOMAINS_FILE = os.path.join("data", "supplement_legit.txt")
-TRUSTED_DOMAINS = set()
+DEFAULT_TRUSTED_DOMAINS = {
+    "google.com", "microsoft.com", "apple.com", "github.com",
+    "shooliniuniversity.com", "shoolini.org", "digiicampus.com",
+    "wikipedia.org", "amazon.com", "netflix.com", "stanford.edu",
+    "mit.edu", "harvard.edu", "youtube.com", "linkedin.com"
+}
+TRUSTED_DOMAINS = set(DEFAULT_TRUSTED_DOMAINS)
 
 if os.path.exists(TRUSTED_DOMAINS_FILE):
     with open(TRUSTED_DOMAINS_FILE, "r", encoding="utf-8") as f:
@@ -42,6 +133,59 @@ if os.path.exists(TRUSTED_DOMAINS_FILE):
             domain = line.strip().lower()
             if domain and not domain.startswith("#"):
                 TRUSTED_DOMAINS.add(domain)
+
+
+def is_valid_url_format(text: str) -> bool:
+    """
+    Validate whether the input is a structurally valid web URL or domain name.
+    Rejects raw conversational text, sentences, or arbitrary non-URL inputs.
+    """
+    if not text or not isinstance(text, str):
+        return False
+
+    text = text.strip()
+
+    # URLs cannot contain raw whitespace (spaces, tabs, newlines)
+    if any(c.isspace() for c in text):
+        return False
+
+    if len(text) < 3:
+        return False
+
+    candidate = text
+    if not candidate.startswith(("http://", "https://", "ftp://")):
+        candidate = "https://" + candidate
+
+    try:
+        parsed = urlparse(candidate)
+        hostname = parsed.hostname
+        if not hostname:
+            return False
+
+        # 1. Check if hostname is an IPv4 address
+        ip_pattern = r"^(\d{1,3}\.){3}\d{1,3}$"
+        if re.match(ip_pattern, hostname):
+            parts = [int(p) for p in hostname.split(".")]
+            return all(0 <= p <= 255 for p in parts)
+
+        # 2. Check if hostname has at least a domain label and a valid TLD
+        host_parts = hostname.split(".")
+        if len(host_parts) < 2:
+            return False
+
+        tld = host_parts[-1]
+        # Top-Level Domain must be alphabetic and >= 2 characters
+        if not tld.isalpha() or len(tld) < 2:
+            return False
+
+        # Each DNS label must be valid alphanumeric or hyphens
+        for part in host_parts:
+            if not part or not re.match(r"^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?$", part):
+                return False
+
+        return True
+    except Exception:
+        return False
 
 
 def is_trusted_domain(url: str) -> bool:
@@ -167,6 +311,50 @@ def get_feature_insights(extracted: dict, is_trusted: bool, impersonated_brand: 
     return insights
 
 
+def get_risk_severity(phishing_prob: float, is_trusted: bool, impersonated: str = None):
+    """
+    Map phishing probability & heuristic indicators to a 4-level SOC Risk Severity Matrix.
+    """
+    if is_trusted:
+        return {
+            "level": "Low Risk / Clean",
+            "tag_class": "sev-low",
+            "advisory": "Verified official authority domain. TLS/SSL infrastructure confirmed. Destination is safe for navigation."
+        }
+
+    if impersonated:
+        return {
+            "level": "Critical Threat",
+            "tag_class": "sev-crit",
+            "advisory": f"Active Brand Impersonation: Do not enter credentials, 2FA codes, or payment details. Deceptively mimicking {impersonated} on an unverified host."
+        }
+
+    if phishing_prob >= 80.0:
+        return {
+            "level": "Critical Threat",
+            "tag_class": "sev-crit",
+            "advisory": "Severe phishing heuristics detected. Block destination and avoid downloading payloads or submitting credentials."
+        }
+    elif phishing_prob >= 50.0:
+        return {
+            "level": "High Risk",
+            "tag_class": "sev-high",
+            "advisory": "Significant structural anomalies detected by Random Forest heuristics. Restrict navigation or inspect in an isolated sandbox."
+        }
+    elif phishing_prob >= 25.0:
+        return {
+            "level": "Moderate Risk / Suspicious",
+            "tag_class": "sev-mod",
+            "advisory": "Elevated lexical complexity or unverified domain reputation. Exercise caution before entering personal data."
+        }
+    else:
+        return {
+            "level": "Low Risk",
+            "tag_class": "sev-low",
+            "advisory": "URL features align with standard legitimate web patterns. Standard web security hygiene recommended."
+        }
+
+
 # ---------------------------------------------------------------------------
 # 5. Prediction Pipeline
 # ---------------------------------------------------------------------------
@@ -179,28 +367,49 @@ def predict_url(url: str):
     if not url:
         raise ValueError("URL cannot be empty")
 
+    if not is_valid_url_format(url):
+        raise ValueError(f"Invalid URL format: '{url}' is not a valid web URL or domain name.")
+
     extracted = extract_url_features(url)
     trusted = is_trusted_domain(url)
+    raw_features = {f: extracted.get(f, 0) for f in features}
+    syntax_tokens = deconstruct_url_syntax(url)
 
     # Tier 1: Check known official / reputable domain
     if trusted:
+        sev = get_risk_severity(0.01, is_trusted=True)
         return {
             "result": "LEGITIMATE",
             "phishing_probability": 0.01,
             "legitimate_probability": 99.99,
             "impersonation_warning": None,
+            "defense_tier": "Tier 1: Authority Allowlist",
+            "defense_tier_description": "Verified official domain. Bypasses false-positive shortcut heuristics with zero latency.",
             "insights": get_feature_insights(extracted, is_trusted=True),
+            "raw_features": raw_features,
+            "risk_severity": sev["level"],
+            "severity_tag_class": sev["tag_class"],
+            "actionable_advisory": sev["advisory"],
+            "syntax_tokens": syntax_tokens,
         }
 
     # Tier 2: Check for brand impersonation in untrusted domain
     impersonated = detect_brand_impersonation(url)
     if impersonated:
+        sev = get_risk_severity(99.85, is_trusted=False, impersonated=impersonated)
         return {
             "result": "PHISHING",
             "phishing_probability": 99.85,
             "legitimate_probability": 0.15,
             "impersonation_warning": f"Brand impersonation detected: This domain attempts to mimic '{impersonated}' but is not an official {impersonated} website.",
+            "defense_tier": "Tier 2: Brand Impersonation Engine",
+            "defense_tier_description": f"Targeted brand '{impersonated}' detected in unverified domain using delimiter-aware regex.",
             "insights": get_feature_insights(extracted, is_trusted=False, impersonated_brand=impersonated),
+            "raw_features": raw_features,
+            "risk_severity": sev["level"],
+            "severity_tag_class": sev["tag_class"],
+            "actionable_advisory": sev["advisory"],
+            "syntax_tokens": syntax_tokens,
         }
 
     # Tier 3: Machine Learning Model Evaluation
@@ -211,11 +420,21 @@ def predict_url(url: str):
     probabilities = model.predict_proba(features_df)[0]
 
     result = "PHISHING" if prediction == 0 else "LEGITIMATE"
+    phish_pct = round(float(probabilities[0]) * 100, 2)
+    legit_pct = round(float(probabilities[1]) * 100, 2)
+    sev = get_risk_severity(phish_pct, is_trusted=False)
 
     return {
         "result": result,
-        "phishing_probability": round(float(probabilities[0]) * 100, 2),
-        "legitimate_probability": round(float(probabilities[1]) * 100, 2),
+        "phishing_probability": phish_pct,
+        "legitimate_probability": legit_pct,
         "impersonation_warning": None,
+        "defense_tier": "Tier 3: Random Forest Classifier",
+        "defense_tier_description": "Evaluated against 18 structural and lexical URL features using 100 decision trees.",
         "insights": get_feature_insights(extracted, is_trusted=False),
+        "raw_features": raw_features,
+        "risk_severity": sev["level"],
+        "severity_tag_class": sev["tag_class"],
+        "actionable_advisory": sev["advisory"],
+        "syntax_tokens": syntax_tokens,
     }

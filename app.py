@@ -83,7 +83,10 @@ def api_predict():
     if not is_valid_url_format(url):
         return jsonify({
             "status": "error",
-            "message": f"Invalid URL format: '{url}' is not a valid web URL or domain name."
+            "result": "INVALID",
+            "message": f"Invalid URL format: '{url}' is plain text, not a valid web URL or domain name.",
+            "defense_tier": "Format Validation",
+            "inspection_notes": "Plain Text"
         }), 400
 
     try:
@@ -138,6 +141,20 @@ def api_batch_predict():
         u_clean = u.strip()
         if not u_clean:
             continue
+
+        if not is_valid_url_format(u_clean):
+            results.append({
+                "url": u_clean,
+                "result": "INVALID",
+                "phishing_probability": None,
+                "legitimate_probability": None,
+                "impersonation_warning": None,
+                "defense_tier": "Format Validation",
+                "inspection_notes": "Plain Text",
+                "status": "invalid",
+            })
+            continue
+
         try:
             pred = predict_url(u_clean)
             results.append({
@@ -147,16 +164,19 @@ def api_batch_predict():
                 "legitimate_probability": pred["legitimate_probability"],
                 "impersonation_warning": pred.get("impersonation_warning"),
                 "defense_tier": pred.get("defense_tier"),
+                "inspection_notes": "⚠️ Brand Spoofing" if pred.get("impersonation_warning") else ("Structural Anomaly" if pred["result"] == "PHISHING" else "Verified Clean"),
                 "status": "success",
             })
         except Exception:
             results.append({
                 "url": u_clean,
                 "result": "INVALID",
-                "phishing_probability": 0,
-                "legitimate_probability": 0,
+                "phishing_probability": None,
+                "legitimate_probability": None,
                 "impersonation_warning": None,
-                "status": "failed",
+                "defense_tier": "Format Validation",
+                "inspection_notes": "Plain Text",
+                "status": "invalid",
             })
 
     return jsonify({

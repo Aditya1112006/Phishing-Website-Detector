@@ -1040,6 +1040,8 @@
     <!-- Hidden Scan Metadata (for clean LocalStorage integration without in-script Jinja tags) -->
     {% if result and url %}
     <div id="latestScanMeta" data-url="{{ url }}" data-result="{{ result }}" style="display: none;"></div>
+    {% elif error and url %}
+    <div id="latestScanMeta" data-url="{{ url }}" data-result="INVALID" style="display: none;"></div>
     {% endif %}
 
 
@@ -1510,9 +1512,10 @@
                     row.className = "audit-row";
                     row.title = "Click to inspect " + item.url;
 
+                    var isInvalid = item.result === "INVALID";
                     var isPhishing = item.result === "PHISHING";
-                    var badgeClass = isPhishing ? "badge-threat" : "badge-clean";
-                    var icon = isPhishing ? "🚨" : "✅";
+                    var badgeClass = isInvalid ? "badge-warning" : (isPhishing ? "badge-threat" : "badge-clean");
+                    var icon = isInvalid ? "⚠️" : (isPhishing ? "🚨" : "✅");
 
                     row.innerHTML =
                         '<div class="audit-left">' +
@@ -1618,21 +1621,33 @@
 
                         data.results.forEach(function(item) {
                             var tr = document.createElement("tr");
+                            var isInvalid = item.result === "INVALID" || item.status === "invalid" || item.status === "failed";
                             var isPhish = item.result === "PHISHING";
-                            var badgeClass = isPhish ? "badge-threat" : "badge-clean";
-                            var riskScore = isPhish ? item.phishing_probability + "%" : (100 - item.legitimate_probability).toFixed(1) + "%";
-                            var tierName = item.defense_tier || "Model Decision";
-                            var note = item.impersonation_warning ? "⚠️ Brand Spoofing" : (isPhish ? "Structural Anomaly" : "Verified Clean");
+                            var badgeClass = isInvalid ? "badge-warning" : (isPhish ? "badge-threat" : "badge-clean");
+                            var badgeText = isInvalid ? "INVALID" : item.result;
+
+                            var riskScoreCell;
+                            if (isInvalid || item.phishing_probability === null || item.phishing_probability === undefined) {
+                                riskScoreCell = '<td class="col-dim col-risk-blank font-mono">—</td>';
+                            } else if (isPhish) {
+                                riskScoreCell = '<td class="color-phishing"><strong>' + item.phishing_probability + '%</strong></td>';
+                            } else {
+                                var legitRisk = (100 - item.legitimate_probability).toFixed(1);
+                                riskScoreCell = '<td class="color-legitimate"><strong>' + legitRisk + '%</strong></td>';
+                            }
+
+                            var tierName = isInvalid ? (item.defense_tier || "Format Validation") : (item.defense_tier || "Model Decision");
+                            var note = isInvalid ? '<span class="note-plain-text">Plain Text</span>' : (item.impersonation_warning ? "⚠️ Brand Spoofing" : (isPhish ? "Structural Anomaly" : "Verified Clean"));
 
                             tr.innerHTML =
                                 '<td class="col-batch-url" title="' + escapeHtml(item.url) + '"><code>' + escapeHtml(item.url) + '</code></td>' +
-                                '<td><span class="status-chip-sm ' + badgeClass + '">' + item.result + '</span></td>' +
-                                '<td class="' + (isPhish ? 'color-phishing' : 'color-legitimate') + '"><strong>' + riskScore + '</strong></td>' +
+                                '<td><span class="status-chip-sm ' + badgeClass + '">' + badgeText + '</span></td>' +
+                                riskScoreCell +
                                 '<td><span class="tier-pill-sm">' + escapeHtml(tierName) + '</span></td>' +
                                 '<td class="col-dim">' + note + '</td>';
 
                             batchTableBody.appendChild(tr);
-                            saveScan(item.url, item.result);
+                            saveScan(item.url, isInvalid ? "INVALID" : item.result);
                         });
 
                         renderHistory();
@@ -1653,17 +1668,24 @@
                     if (!latestBatchData || latestBatchData.length === 0) return;
 
                     var csvRows = [
-                        ["Target_URL", "Verdict", "Threat_Risk_Pct", "Trust_Confidence_Pct", "Defense_Tier", "Impersonation_Alert"]
+                        ["Target_URL", "Verdict", "Threat_Risk_Pct", "Trust_Confidence_Pct", "Defense_Tier", "Inspection_Notes"]
                     ];
 
                     latestBatchData.forEach(function(item) {
+                        var isInvalid = item.result === "INVALID" || item.status === "invalid" || item.status === "failed";
+                        var isPhish = item.result === "PHISHING";
+                        var risk = (isInvalid || item.phishing_probability === null || item.phishing_probability === undefined) ? "" : item.phishing_probability;
+                        var trust = (isInvalid || item.legitimate_probability === null || item.legitimate_probability === undefined) ? "" : item.legitimate_probability;
+                        var tier = isInvalid ? (item.defense_tier || "Format Validation") : (item.defense_tier || "Model Decision");
+                        var note = isInvalid ? "Plain Text" : (item.impersonation_warning ? "Brand Spoofing" : (isPhish ? "Structural Anomaly" : "Verified Clean"));
+
                         csvRows.push([
-                            '"' + item.url.replace(/"/g, '""') + '"',
-                            item.result,
-                            item.phishing_probability,
-                            item.legitimate_probability,
-                            '"' + (item.defense_tier || "N/A").replace(/"/g, '""') + '"',
-                            '"' + (item.impersonation_warning || "None").replace(/"/g, '""') + '"'
+                            '"' + (item.url || "").replace(/"/g, '""') + '"',
+                            isInvalid ? "INVALID" : (item.result || "UNKNOWN"),
+                            risk,
+                            trust,
+                            '"' + tier.replace(/"/g, '""') + '"',
+                            '"' + note.replace(/"/g, '""') + '"'
                         ]);
                     });
 
@@ -1868,14 +1890,15 @@
                     .then(function(data) {
                         if (data.status !== "success") return;
 
+                        var isInvalid = data.result === "INVALID";
                         var isPhish = data.result === "PHISHING";
                         var phishProb = Number(data.phishing_probability) || 0;
                         var legitProb = Number(data.legitimate_probability) || 0;
 
-                        if (simEvalIcon) simEvalIcon.textContent = isPhish ? "🚨" : "✅";
+                        if (simEvalIcon) simEvalIcon.textContent = isInvalid ? "⚠️" : (isPhish ? "🚨" : "✅");
                         if (simEvalBadge) {
                             simEvalBadge.textContent = data.result;
-                            simEvalBadge.className = "diag-badge " + (isPhish ? "badge-threat" : "badge-clean");
+                            simEvalBadge.className = "diag-badge " + (isInvalid ? "badge-warning" : (isPhish ? "badge-threat" : "badge-clean"));
                         }
                         if (simEvalScore) {
                             simEvalScore.textContent = phishProb.toFixed(2) + "%";

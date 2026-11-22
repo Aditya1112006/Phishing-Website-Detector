@@ -204,6 +204,46 @@ class TestFlaskAPIRoutes(unittest.TestCase):
         data = resp.get_json()
         self.assertEqual(data["status"], "error")
 
+    def test_rfc_2606_reserved_documentation_domains(self):
+        """Test RFC 2606 reserved domains (example.com) are classified as Legitimate."""
+        for i in range(1, 26):
+            url = f"https://example.com/test-{i}"
+            res = predict_url(url)
+            self.assertEqual(res["result"], "LEGITIMATE")
+            self.assertIn("RFC 2606", res.get("inspection_notes", ""))
+            self.assertEqual(res["defense_tier"], "Tier 1: Authority Allowlist")
+
+    def test_batch_predict_truncation_feedback(self):
+        """Test that submitting 26 URLs provides clear truncation metadata and warning."""
+        urls = [f"https://example.com/test-{i}" for i in range(1, 27)]
+        resp = self.client.post("/api/batch_predict", json={"urls": urls})
+        self.assertEqual(resp.status_code, 200)
+        data = resp.get_json()
+        self.assertEqual(data["total_submitted"], 26)
+        self.assertEqual(data["total_processed"], 25)
+        self.assertEqual(data["omitted_count"], 1)
+        self.assertIsNotNone(data["warning"])
+        self.assertIn("omitted", data["warning"])
+
+    def test_benchmark_metrics_mathematical_consistency(self):
+        """Test that benchmark JSON metrics match the confusion matrix exactly."""
+        import json
+        with open("models/model_comparison_benchmark.json", "r", encoding="utf-8") as f:
+            benchmarks = json.load(f)
+        champ = next(b for b in benchmarks if b.get("is_champion"))
+        cm = champ["confusion_matrix"]
+        tp, tn, fp, fn = cm["true_positive"], cm["true_negative"], cm["false_positive"], cm["false_negative"]
+        total = tp + tn + fp + fn
+        acc = round((tp + tn) / total * 100, 2)
+        prec = round(tp / (tp + fp) * 100, 2)
+        rec = round(tp / (tp + fn) * 100, 2)
+        f1 = round(2 * ((prec / 100) * (rec / 100)) / ((prec / 100) + (rec / 100)) * 100, 2)
+
+        self.assertAlmostEqual(champ["accuracy_pct"], acc, places=2)
+        self.assertAlmostEqual(champ["precision_pct"], prec, places=2)
+        self.assertAlmostEqual(champ["recall_pct"], rec, places=2)
+        self.assertAlmostEqual(champ["f1_score_pct"], f1, places=2)
+
 
 if __name__ == "__main__":
     unittest.main()

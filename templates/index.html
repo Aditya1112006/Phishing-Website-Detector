@@ -73,9 +73,9 @@
             <div class="metric-card">
                 <div class="metric-top">
                     <span class="metric-label">Model Accuracy</span>
-                    <span class="metric-tag tag-green">99.54%</span>
+                    <span class="metric-tag tag-green">99.57%</span>
                 </div>
-                <div class="metric-value">99.54<span class="metric-unit">%</span></div>
+                <div class="metric-value">99.57<span class="metric-unit">%</span></div>
                 <div class="metric-sub">Held-out test set (47,074 URLs)</div>
             </div>
 
@@ -891,6 +891,10 @@
                             rows="6"
                             spellcheck="false"
                         ></textarea>
+                        <div class="batch-counter-row">
+                            <span id="batchCountBadge" class="batch-counter-badge">0 / 25 URLs</span>
+                            <span id="batchCountWarning" class="batch-counter-warning" style="display: none;"></span>
+                        </div>
                     </div>
 
                     <div class="batch-actions-row">
@@ -910,6 +914,11 @@
                                 </svg>
                             </span>
                         </button>
+                    </div>
+
+                    <!-- Batch Warning Banner (Exceeding Batch Limits) -->
+                    <div id="batchWarningBanner" class="batch-warning-banner" style="display: none; margin-top: 14px;">
+                        <span id="batchWarningText"></span>
                     </div>
 
                     <!-- Batch Results Output Table -->
@@ -977,7 +986,7 @@
                             <p class="tier-card-desc">
                                 100 decision trees evaluating 18 structural features (domain length, digit ratio, letter ratio, subdomain count, hex obfuscation) trained on 235,000+ PhiUSIIL samples.
                             </p>
-                            <div class="tier-card-footer font-mono">99.54% Held-out Test Accuracy</div>
+                            <div class="tier-card-footer font-mono">99.57% Held-out Test Accuracy</div>
                         </div>
 
                         <div class="tier-card">
@@ -1060,11 +1069,11 @@
                 <div class="modal-sec-title">Held-out Test Set Evaluation Metrics (20% Split, 47,074 Samples)</div>
                 <div class="bench-metrics-grid">
                     <div class="bench-metric">
-                        <div class="bench-metric-val">99.54%</div>
+                        <div class="bench-metric-val">99.57%</div>
                         <div class="bench-metric-name">Accuracy</div>
                     </div>
                     <div class="bench-metric">
-                        <div class="bench-metric-val">99.39%</div>
+                        <div class="bench-metric-val">99.20%</div>
                         <div class="bench-metric-name">Precision</div>
                     </div>
                     <div class="bench-metric">
@@ -1072,7 +1081,7 @@
                         <div class="bench-metric-name">Recall</div>
                     </div>
                     <div class="bench-metric">
-                        <div class="bench-metric-val">99.60%</div>
+                        <div class="bench-metric-val">99.50%</div>
                         <div class="bench-metric-name">F1-Score</div>
                     </div>
                 </div>
@@ -1105,10 +1114,10 @@
                                         <span class="arena-model-family">Ensemble Bagging</span>
                                     </div>
                                 </td>
-                                <td><span class="arena-num val-high">99.54%</span></td>
-                                <td><span class="arena-num val-high">99.39%</span></td>
+                                <td><span class="arena-num val-high">99.57%</span></td>
+                                <td><span class="arena-num val-high">99.20%</span></td>
                                 <td><span class="arena-num val-high">99.81%</span></td>
-                                <td><span class="arena-num val-high">99.60%</span></td>
+                                <td><span class="arena-num val-high">99.50%</span></td>
                                 <td><span class="arena-num">&lt; 0.4ms</span></td>
                                 <td><span class="arena-badge badge-champ">Selected Champion</span></td>
                                 <td class="arena-rationale">Optimal Bias-Variance balance. Decorrelates trees via random feature subspace splitting (&radic;18 &asymp; 4); models complex non-linear URL patterns.</td>
@@ -1169,8 +1178,8 @@
                         <div class="spectrum-bar-list">
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label label-champ">Random Forest</span>
-                                <div class="spectrum-track"><div class="spectrum-fill fill-champ" style="width: 99.54%;"></div></div>
-                                <span class="spectrum-val">99.54%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill fill-champ" style="width: 99.57%;"></div></div>
+                                <span class="spectrum-val">99.57%</span>
                             </div>
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label">Decision Tree</span>
@@ -1323,10 +1332,10 @@
         "model_metadata": {
             "model_type": "Random Forest Classifier (100 Decision Trees)",
             "training_corpus": "PhiUSIIL Phishing Benchmark (235,370 URLs)",
-            "accuracy": "99.54%",
-            "precision": "99.39%",
+            "accuracy": "99.57%",
+            "precision": "99.20%",
             "recall": "99.81%",
-            "f1_score": "99.60%"
+            "f1_score": "99.50%"
         }
     }
     </script>
@@ -1561,6 +1570,34 @@
             // 8. Bulk / Batch Scan Handlers
             var loadSampleBtn = document.getElementById("loadSampleBatchBtn");
             var batchInput = document.getElementById("batchInput");
+            var batchCountBadge = document.getElementById("batchCountBadge");
+            var batchCountWarning = document.getElementById("batchCountWarning");
+            var batchWarningBanner = document.getElementById("batchWarningBanner");
+            var batchWarningText = document.getElementById("batchWarningText");
+
+            function updateBatchCounter() {
+                if (!batchInput || !batchCountBadge) return;
+                var lines = batchInput.value.split("\n").map(function(s) { return s.trim(); }).filter(Boolean);
+                var count = lines.length;
+                batchCountBadge.textContent = count + " / 25 URLs";
+
+                if (count > 25) {
+                    batchCountBadge.classList.add("counter-exceeded");
+                    if (batchCountWarning) {
+                        batchCountWarning.style.display = "inline";
+                        batchCountWarning.textContent = "⚠️ " + count + " URLs entered. Only first 25 will run (" + (count - 25) + " omitted).";
+                    }
+                } else {
+                    batchCountBadge.classList.remove("counter-exceeded");
+                    if (batchCountWarning) batchCountWarning.style.display = "none";
+                }
+            }
+
+            if (batchInput) {
+                batchInput.addEventListener("input", updateBatchCounter);
+                batchInput.addEventListener("paste", function() { setTimeout(updateBatchCounter, 50); });
+            }
+
             if (loadSampleBtn && batchInput) {
                 loadSampleBtn.addEventListener("click", function() {
                     batchInput.value = [
@@ -1570,6 +1607,7 @@
                         "https://netflix-billing-update.org",
                         "http://service-mitld.firebaseapp.com/"
                     ].join("\n");
+                    updateBatchCounter();
                 });
             }
 
@@ -1609,6 +1647,14 @@
                             return;
                         }
 
+                        // Display truncation alert if batch exceeded maximum capacity
+                        if (data.warning && batchWarningBanner && batchWarningText) {
+                            batchWarningText.textContent = data.warning;
+                            batchWarningBanner.style.display = "flex";
+                        } else if (batchWarningBanner) {
+                            batchWarningBanner.style.display = "none";
+                        }
+
                         latestBatchData = data.results;
                         batchTableBody.innerHTML = "";
                         if (batchResultsCount) {
@@ -1634,7 +1680,7 @@
                             }
 
                             var tierName = isInvalid ? (item.defense_tier || "Format Validation") : (item.defense_tier || "Model Decision");
-                            var note = isInvalid ? '<span class="note-plain-text">Plain Text</span>' : (item.impersonation_warning ? "⚠️ Brand Spoofing" : (isPhish ? "Structural Anomaly" : "Verified Clean"));
+                            var note = isInvalid ? '<span class="note-plain-text">Plain Text</span>' : (item.inspection_notes ? escapeHtml(item.inspection_notes) : (item.impersonation_warning ? "⚠️ Brand Spoofing" : (isPhish ? "Structural Anomaly" : "Verified Clean")));
 
                             tr.innerHTML =
                                 '<td class="col-batch-url" title="' + escapeHtml(item.url) + '"><code>' + escapeHtml(item.url) + '</code></td>' +
@@ -1854,6 +1900,8 @@
             }
 
             var simDebounceTimer = null;
+            var currentSimAbortController = null;
+            var simSequenceId = 0;
 
             function runSimEvaluation() {
                 var url = buildSimUrl();
@@ -1876,16 +1924,47 @@
                     }
                 });
 
+                // Abort any prior in-flight fetch and cancel pending debounce timer
                 clearTimeout(simDebounceTimer);
+                if (currentSimAbortController) {
+                    try { currentSimAbortController.abort(); } catch (e) {}
+                }
+
+                // Increment sequence ID so only this request can update UI
+                simSequenceId += 1;
+                var thisSeqId = simSequenceId;
+
                 simDebounceTimer = setTimeout(function() {
+                    currentSimAbortController = new AbortController();
+
                     fetch("/api/predict", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ url: url })
+                        body: JSON.stringify({ url: url }),
+                        signal: currentSimAbortController.signal
                     })
                     .then(function(res) { return res.json(); })
                     .then(function(data) {
-                        if (data.status !== "success") return;
+                        // Drop response if a newer evaluation or reset has started
+                        if (thisSeqId !== simSequenceId) return;
+
+                        if (data.status !== "success") {
+                            if (simEvalBadge) {
+                                simEvalBadge.textContent = data.result || "ERROR";
+                                simEvalBadge.className = "diag-badge badge-warning";
+                            }
+                            if (simEvalScore) {
+                                simEvalScore.textContent = "--";
+                                simEvalScore.className = "diag-score-num font-mono color-phishing";
+                            }
+                            if (simTierBadge) {
+                                simTierBadge.textContent = data.defense_tier || "Validation Error";
+                            }
+                            if (simTierDesc) {
+                                simTierDesc.textContent = data.message || "Failed to evaluate input.";
+                            }
+                            return;
+                        }
 
                         var isInvalid = data.result === "INVALID";
                         var isPhish = data.result === "PHISHING";
@@ -1934,8 +2013,15 @@
                             });
                         }
                     })
-                    .catch(function() {});
-                }, 25);
+                    .catch(function(err) {
+                        if (err && err.name === "AbortError") return;
+                        if (thisSeqId !== simSequenceId) return;
+                        if (simEvalBadge) {
+                            simEvalBadge.textContent = "COMM ERROR";
+                            simEvalBadge.className = "diag-badge badge-warning";
+                        }
+                    });
+                }, 20);
             }
 
             // Enable clicking anywhere on vector card to toggle
@@ -1964,10 +2050,24 @@
             // Reset button
             if (simResetBtn) {
                 simResetBtn.addEventListener("click", function() {
+                    clearTimeout(simDebounceTimer);
+                    if (currentSimAbortController) {
+                        try { currentSimAbortController.abort(); } catch (e) {}
+                    }
+                    simSequenceId += 1;
+
                     [simToggleHttp, simToggleSpoof, simToggleIp, simToggleHex, simToggleSubdomain, simToggleQuery].forEach(function(cb) {
                         if (cb) cb.checked = false;
                     });
                     if (simBaseDomain) simBaseDomain.selectedIndex = 0;
+
+                    // Remove active card styling
+                    ["cardToggleHttp", "cardToggleSpoof", "cardToggleIp", "cardToggleHex", "cardToggleSubdomain", "cardToggleQuery"].forEach(function(id) {
+                        var c = document.getElementById(id);
+                        if (c) c.classList.remove("vector-active");
+                    });
+
+                    // Execute immediate evaluation for clean starting URL
                     runSimEvaluation();
                 });
             }

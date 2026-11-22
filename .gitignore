@@ -26,6 +26,7 @@ models/
 # Sensitive & Environment Files
 .env
 .env.*
+!.env.example
 secrets.json
 config.json
 credentials.json

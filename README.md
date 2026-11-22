@@ -176,17 +176,23 @@ curl -X POST http://127.0.0.1:5000/api/predict \
 ```text
 Phishing-Website-Detector/
 ├── app.py                         # Flask application & web / API routes
+├── config.py                      # Centralized environment configuration (.env loader)
 ├── predictor.py                   # 4-Tier Hybrid Defense-in-Depth Pipeline
 ├── url_features.py                # 18-Signal Structural & Lexical Feature Extractor
 ├── train_comparative_models.py    # Multi-model training, benchmarking & audit generator
 ├── retrain.py                     # Champion Random Forest training script
-├── debug_url.py                   # Forensic CLI URL debugging script
-├── check_model.py                 # Binary model integrity check
 ├── requirements.txt               # Pinned dependencies
+├── .env.example                   # Environment variable template
+├── .gitignore                     # Git exclusion rules
 ├── EXECUTION_GUIDE.md             # Complete step-by-step setup guide
 ├── README.md                      # Platform documentation & overview
 ├── LICENSE                        # MIT License
-├── .gitignore                     # Git ignore rules
+│
+├── scripts/
+│   └── debug_url.py               # Forensic CLI URL debugging script
+│
+├── tests/
+│   └── test_pipeline.py           # Automated unit & integration test suite
 │
 ├── static/
 │   └── style.css                  # Obsidian glassmorphic UI styling

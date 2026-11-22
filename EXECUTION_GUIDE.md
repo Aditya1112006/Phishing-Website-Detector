@@ -246,17 +246,23 @@ Then run `.\ml_env\Scripts\Activate.ps1` again.
 Phishing-Website-Detector/
 │
 ├── app.py                         # Flask application & HTTP REST routing
+├── config.py                      # Centralized environment configuration (.env loader)
 ├── predictor.py                   # 4-Tier Hybrid Defense-in-Depth Pipeline
 ├── url_features.py                # 18-Signal Structural & Lexical Feature Extractor
 ├── train_comparative_models.py    # Multi-model training, benchmarking & audit generator
 ├── retrain.py                     # Champion Random Forest training script
-├── debug_url.py                   # Standalone CLI URL forensic debugger
-├── check_model.py                 # Quick binary integrity verifier
 ├── requirements.txt               # Pinned Python dependencies
+├── .env.example                   # Environment variable template
+├── .gitignore                     # Git exclusion rules
 ├── EXECUTION_GUIDE.md             # This comprehensive execution & setup manual
 ├── README.md                      # GitHub presentation & technical overview
 ├── LICENSE                        # MIT Open Source License
-├── .gitignore                     # Git exclusion rules
+│
+├── scripts/
+│   └── debug_url.py               # Standalone CLI URL forensic debugger
+│
+├── tests/
+│   └── test_pipeline.py           # Automated unit & integration test suite
 │
 ├── static/
 │   └── style.css                  # Obsidian glassmorphic UI stylesheet

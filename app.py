@@ -168,16 +168,17 @@ def api_batch_predict():
     if isinstance(urls, str):
         urls = [u.strip() for u in urls.splitlines() if u.strip()]
 
-    if not urls:
+    raw_urls = [u.strip() for u in urls if isinstance(u, str) and u.strip()]
+    if not raw_urls:
         return jsonify({"status": "error", "message": "At least one URL is required in the 'urls' list."}), 400
+
+    total_submitted = len(raw_urls)
+    capped_urls = raw_urls[:Config.MAX_BATCH_URLS]
+    omitted_count = max(0, total_submitted - len(capped_urls))
 
     results = []
     # Cap batch processing to configured maximum
-    for u in urls[:Config.MAX_BATCH_URLS]:
-        clean_u = u.strip()
-        if not clean_u:
-            continue
-
+    for clean_u in capped_urls:
         if not is_valid_url_format(clean_u):
             results.append({
                 "url": clean_u,
@@ -201,8 +202,9 @@ def api_batch_predict():
                 "impersonation_warning": pred.get("impersonation_warning"),
                 "defense_tier": pred.get("defense_tier"),
                 "inspection_notes": (
-                    "⚠️ Brand Spoofing" if pred.get("impersonation_warning")
-                    else ("Structural Anomaly" if pred["result"] == "PHISHING" else "Verified Clean")
+                    pred.get("inspection_notes")
+                    or ("⚠️ Brand Spoofing" if pred.get("impersonation_warning")
+                        else ("Structural Anomaly" if pred["result"] == "PHISHING" else "Verified Clean"))
                 ),
                 "status": "success",
             })
@@ -222,6 +224,13 @@ def api_batch_predict():
     return jsonify({
         "status": "success",
         "count": len(results),
+        "total_submitted": total_submitted,
+        "total_processed": len(results),
+        "omitted_count": omitted_count,
+        "warning": (
+            f"Batch exceeded maximum capacity of {Config.MAX_BATCH_URLS} URLs. "
+            f"{omitted_count} trailing URL(s) were omitted."
+        ) if omitted_count > 0 else None,
         "results": results,
     }), 200
 

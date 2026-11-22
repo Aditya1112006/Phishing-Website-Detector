@@ -15,13 +15,17 @@ data/
 *.db
 
 # Trained Models & Machine Learning Artifacts
-models/
+models/*
 *.pkl
 *.joblib
 *.h5
 *.onnx
 *.pth
 *.pt
+# Allow deployed production champion model for cloud hosting
+!models/phishing_url_model.pkl
+!models/phishing_url_features.pkl
+!models/model_comparison_benchmark.json
 
 # Sensitive & Environment Files
 .env

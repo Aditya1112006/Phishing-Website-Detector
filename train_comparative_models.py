@@ -133,10 +133,10 @@ def main():
             "family": "Ensemble Bagging",
             "model_file": "phishing_url_model.pkl",
             "is_champion": True,
-            "accuracy_pct": 99.54,
-            "precision_pct": 99.39,
+            "accuracy_pct": 99.57,
+            "precision_pct": 99.20,
             "recall_pct": 99.81,
-            "f1_score_pct": 99.60,
+            "f1_score_pct": 99.50,
             "latency": "< 0.4ms",
             "status": "Selected Champion",
             "confusion_matrix": {

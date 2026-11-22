@@ -112,7 +112,7 @@ This script executes in **~4 seconds** on CPU and outputs:
 ======================================================================================
 Model Name                     Accuracy   Precision   Recall     F1-Score   Latency    Status
 --------------------------------------------------------------------------------------
-⭐ Random Forest (100 Trees)    99.54 %    99.39 %     99.81 %    99.60 %    < 0.4ms    Selected Champion
+⭐ Random Forest (100 Trees)    99.57 %    99.20 %     99.81 %    99.50 %    < 0.4ms    Selected Champion
 Decision Tree (CART - Gini)    97.80 %    97.20 %     98.10 %    97.65 %    < 0.1ms    High Variance
 Linear SVM (Support Vector)    91.40 %    90.80 %     92.10 %    91.45 %    ~1.8ms     Linear Bound
 Logistic Regression (L2)       89.20 %    88.50 %     90.10 %    89.29 %    < 0.2ms    High Bias

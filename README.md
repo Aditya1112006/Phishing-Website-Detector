@@ -4,7 +4,7 @@
 [![Flask](https://img.shields.io/badge/Flask-3.1.3-000000.svg?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.7.2-F7931E.svg?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![Classical ML](https://img.shields.io/badge/ML%20Architecture-Classical%20(No%20Deep%20Learning)-2ea44f.svg)]()
-[![Model Accuracy](https://img.shields.io/badge/Held--Out%20Accuracy-99.54%25-brightgreen.svg)]()
+[![Model Accuracy](https://img.shields.io/badge/Held--Out%20Accuracy-99.57%25-brightgreen.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 PhishGuard AI is a real-time phishing URL detection engine and security analyst console built with Python, scikit-learn, and Flask. 
@@ -159,7 +159,7 @@ All models were trained and tested on an identical 80/20 stratified split of the
 
 | Algorithm / Model | Model Family | Accuracy | Precision | Recall | F1-Score | Inference Latency | Finding / Rationale |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| ⭐ **Random Forest (100 Trees)** | **Ensemble Bagging** | **99.54%** | **99.39%** | **99.81%** | **99.60%** | **0.60 ms** | **Selected Champion.** Optimal bias-variance trade-off through subspace feature decorrelation. |
+| ⭐ **Random Forest (100 Trees)** | **Ensemble Bagging** | **99.57%** | **99.20%** | **99.81%** | **99.50%** | **0.60 ms** | **Selected Champion.** Optimal bias-variance trade-off through subspace feature decorrelation. |
 | **Decision Tree (CART - Gini)** | Single Tree | 97.80% | 97.20% | 98.10% | 97.65% | 0.08 ms | **High Variance.** Prone to over-reacting to small lexical shifts without ensemble voting. |
 | **Linear SVM** | Max-Margin | 91.40% | 90.80% | 92.10% | 91.45% | 1.80 ms | **Linear Bound.** Underfits non-linear feature conjunctions (e.g., digit density + protocol). |
 | **Logistic Regression (L2)** | Generalized Linear | 89.20% | 88.50% | 90.10% | 89.29% | 0.15 ms | **High Bias.** Struggles when individual features are ambiguous but malicious in combination. |

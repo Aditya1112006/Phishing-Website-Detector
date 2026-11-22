@@ -44,7 +44,10 @@ def extract_url_features(url: str) -> Dict[str, Any]:
     if not raw_url:
         raise ValueError("URL cannot be empty")
 
-    url_for_parse = raw_url if raw_url.startswith(("http://", "https://")) else "https://" + raw_url
+    # Prepend default https scheme only if no web protocol is explicitly present.
+    # Case-insensitive check to preserve input protocol (e.g. HTTP:// or https://).
+    has_scheme = raw_url.lower().startswith(("http://", "https://", "ftp://"))
+    url_for_parse = raw_url if has_scheme else "https://" + raw_url
     parsed = urlparse(url_for_parse)
     hostname = parsed.hostname or ""
 

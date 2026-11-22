@@ -121,7 +121,8 @@ except Exception:
 def deconstruct_url_syntax(url: str) -> Dict[str, Any]:
     """Tokenize a URL into protocol, host, domain, TLD, path, query, and flags."""
     raw = str(url).strip()
-    has_scheme = raw.startswith(("http://", "https://", "ftp://"))
+    lower_raw = raw.lower()
+    has_scheme = lower_raw.startswith(("http://", "https://", "ftp://"))
     candidate = raw if has_scheme else "https://" + raw
 
     try:
@@ -130,13 +131,20 @@ def deconstruct_url_syntax(url: str) -> Dict[str, Any]:
         candidate = "https://" + re.sub(r"[^\w\-\.:/?&=#%]", "", raw)
         parsed = urlparse(candidate)
 
-    protocol = parsed.scheme if parsed.scheme else ("https" if not has_scheme else "http")
-    is_https = (protocol.lower() == "https")
+    protocol = parsed.scheme.lower() if parsed.scheme else ("https" if not has_scheme else "http")
+    is_https = (protocol == "https")
 
     netloc = parsed.netloc or parsed.path.split("/")[0]
     port = parsed.port
-    hostname = parsed.hostname or (netloc.split(":")[0] if netloc else "")
-    is_ip = bool(re.match(r"^(\d{1,3}\.){3}\d{1,3}$", hostname))
+    hostname = (parsed.hostname or (netloc.split(":")[0] if netloc else "")).rstrip(".")
+
+    # Detect IPv4 or IPv6 host
+    try:
+        import ipaddress
+        ipaddress.ip_address(hostname)
+        is_ip = True
+    except (ValueError, ImportError):
+        is_ip = False
 
     try:
         ext = tldextract.extract(hostname)
@@ -187,11 +195,22 @@ def is_valid_url_format(text: str) -> bool:
     if not text or not isinstance(text, str):
         return False
 
-    text = text.strip()
-    if any(c.isspace() for c in text) or len(text) < 3:
+    clean = text.strip()
+    if any(c.isspace() for c in clean) or len(clean) < 3:
         return False
 
-    candidate = text if text.startswith(("http://", "https://", "ftp://")) else "https://" + text
+    if clean.startswith("://"):
+        return False
+
+    # Reject non-web schemes (e.g. mailto:, javascript:, data:, file:)
+    scheme_match = re.match(r"^([a-zA-Z][a-zA-Z0-9+\-.]*):", clean)
+    if scheme_match:
+        scheme = scheme_match.group(1).lower()
+        if scheme not in ("http", "https", "ftp"):
+            return False
+
+    has_web_scheme = clean.lower().startswith(("http://", "https://", "ftp://"))
+    candidate = clean if has_web_scheme else "https://" + clean
 
     try:
         parsed = urlparse(candidate)
@@ -199,13 +218,16 @@ def is_valid_url_format(text: str) -> bool:
         if not hostname:
             return False
 
-        # Validate IPv4 addresses
-        if re.match(r"^(\d{1,3}\.){3}\d{1,3}$", hostname):
-            parts = [int(p) for p in hostname.split(".")]
-            return all(0 <= p <= 255 for p in parts)
+        # Support both IPv4 and IPv6 hosts
+        try:
+            import ipaddress
+            ipaddress.ip_address(hostname)
+            return True
+        except (ValueError, ImportError):
+            pass
 
-        # Validate domain labels and TLD
-        host_parts = hostname.split(".")
+        norm_host = hostname.rstrip(".")
+        host_parts = norm_host.split(".")
         if len(host_parts) < 2:
             return False
 
@@ -224,17 +246,17 @@ def is_valid_url_format(text: str) -> bool:
 
 def is_trusted_domain(url: str) -> bool:
     """Check if the URL belongs to a verified official authority domain."""
-    if not url.startswith(("http://", "https://")):
-        url = "https://" + url
+    clean = str(url).strip()
+    has_scheme = clean.lower().startswith(("http://", "https://", "ftp://"))
+    candidate = clean if has_scheme else "https://" + clean
 
-    hostname = (urlparse(url).hostname or "").lower()
+    hostname = (urlparse(candidate).hostname or "").lower().rstrip(".")
     if hostname.startswith("www."):
         hostname = hostname[4:]
 
     parts = hostname.split(".")
     for i in range(len(parts) - 1):
-        candidate = ".".join(parts[i:])
-        if candidate in TRUSTED_DOMAINS:
+        if ".".join(parts[i:]) in TRUSTED_DOMAINS:
             return True
 
     return False
@@ -242,10 +264,11 @@ def is_trusted_domain(url: str) -> bool:
 
 def detect_brand_impersonation(url: str) -> Optional[str]:
     """Detect if an unlisted hostname embeds a protected brand with delimiters."""
-    if not url.startswith(("http://", "https://")):
-        url = "https://" + url
+    clean = str(url).strip()
+    has_scheme = clean.lower().startswith(("http://", "https://", "ftp://"))
+    candidate = clean if has_scheme else "https://" + clean
 
-    hostname = (urlparse(url).hostname or "").lower()
+    hostname = (urlparse(candidate).hostname or "").lower().rstrip(".")
     if hostname.startswith("www."):
         hostname = hostname[4:]
 

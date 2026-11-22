@@ -64,12 +64,20 @@ COMPILED_BRAND_PATTERNS = {
 # ---------------------------------------------------------------------------
 # Institutional & High-Reputation Authority Allowlist
 # ---------------------------------------------------------------------------
+# RFC 2606 and RFC 6761 officially reserved documentation and test domains
+RFC_RESERVED_DOMAINS = {
+    "example.com", "example.org", "example.net", "example.edu",
+    "localhost", "invalid", "test", "example"
+}
+
 DEFAULT_TRUSTED_DOMAINS = {
     "google.com", "microsoft.com", "apple.com", "github.com",
-    "shooliniuniversity.com", "shoolini.org", "digiicampus.com",
+    "paypal.com", "shooliniuniversity.com", "shoolini.org", "digiicampus.com",
     "wikipedia.org", "amazon.com", "netflix.com", "stanford.edu",
-    "mit.edu", "harvard.edu", "youtube.com", "linkedin.com"
+    "mit.edu", "harvard.edu", "youtube.com", "linkedin.com",
+    "facebook.com", "twitter.com", "instagram.com", "cloudflare.com"
 }
+DEFAULT_TRUSTED_DOMAINS.update(RFC_RESERVED_DOMAINS)
 
 TRUSTED_DOMAINS = set(DEFAULT_TRUSTED_DOMAINS)
 if os.path.exists(Config.TRUSTED_DOMAINS_FILE):
@@ -259,7 +267,25 @@ def is_trusted_domain(url: str) -> bool:
         if ".".join(parts[i:]) in TRUSTED_DOMAINS:
             return True
 
-    return False
+    return hostname in TRUSTED_DOMAINS
+
+
+def is_rfc_reserved_domain(url: str) -> bool:
+    """Check if the URL belongs to an RFC 2606 / RFC 6761 reserved domain (e.g. example.com)."""
+    clean = str(url).strip()
+    has_scheme = clean.lower().startswith(("http://", "https://", "ftp://"))
+    candidate = clean if has_scheme else "https://" + clean
+
+    hostname = (urlparse(candidate).hostname or "").lower().rstrip(".")
+    if hostname.startswith("www."):
+        hostname = hostname[4:]
+
+    parts = hostname.split(".")
+    for i in range(len(parts) - 1):
+        if ".".join(parts[i:]) in RFC_RESERVED_DOMAINS:
+            return True
+
+    return hostname in RFC_RESERVED_DOMAINS
 
 
 def detect_brand_impersonation(url: str) -> Optional[str]:
@@ -283,12 +309,15 @@ def detect_brand_impersonation(url: str) -> Optional[str]:
     return None
 
 
-def get_feature_insights(extracted: Dict[str, Any], is_trusted: bool, impersonated_brand: Optional[str] = None):
+def get_feature_insights(extracted: Dict[str, Any], is_trusted: bool, impersonated_brand: Optional[str] = None, is_rfc_reserved: bool = False):
     """Generate Explainable AI inspection factors from extracted features."""
     is_https = extracted.get("IsHTTPS", 0) == 1
     is_ip = extracted.get("IsDomainIP", 0) == 1
     has_obf = extracted.get("HasObfuscation", 0) == 1
     subdomains = extracted.get("NoOfSubDomain", 0)
+
+    auth_val = "RFC 2606 Reserved Domain" if is_rfc_reserved else ("Verified Official Domain" if is_trusted else "Unlisted / Standard Domain")
+    auth_badge = "RFC 2606" if is_rfc_reserved else ("Verified" if is_trusted else "Unverified")
 
     return [
         {
@@ -323,9 +352,9 @@ def get_feature_insights(extracted: Dict[str, Any], is_trusted: bool, impersonat
         },
         {
             "name": "Domain Authority",
-            "value": "Verified Official Domain" if is_trusted else "Unlisted / Standard Domain",
+            "value": auth_val,
             "safe": is_trusted,
-            "badge": "Verified" if is_trusted else "Unverified",
+            "badge": auth_badge,
         },
     ]
 
@@ -389,6 +418,7 @@ def predict_url(url: str) -> Dict[str, Any]:
     extracted = extract_url_features(clean_url)
     syntax_tokens = deconstruct_url_syntax(clean_url)
     is_domain_listed = is_trusted_domain(clean_url)
+    is_rfc_reserved = is_rfc_reserved_domain(clean_url)
 
     # Tier 1: Authority Allowlist Integrity Verification
     is_https = extracted.get("IsHTTPS", 0) == 1
@@ -398,18 +428,24 @@ def predict_url(url: str) -> Dict[str, Any]:
 
     if is_domain_listed and is_https and not has_obf and not deep_sub and not digit_padding:
         sev = get_risk_severity(0.01, is_trusted=True)
+        tier_desc = (
+            "Verified RFC 2606/6761 reserved domain for documentation and testing. Clean TLS infrastructure confirmed."
+            if is_rfc_reserved
+            else "Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed."
+        )
         return {
             "result": "LEGITIMATE",
             "phishing_probability": 0.01,
             "legitimate_probability": 99.99,
             "impersonation_warning": None,
             "defense_tier": "Tier 1: Authority Allowlist",
-            "defense_tier_description": "Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed.",
-            "insights": get_feature_insights(extracted, is_trusted=True),
+            "defense_tier_description": tier_desc,
+            "inspection_notes": "Reserved Documentation Domain (RFC 2606)" if is_rfc_reserved else "Verified Clean",
+            "insights": get_feature_insights(extracted, is_trusted=True, is_rfc_reserved=is_rfc_reserved),
             "raw_features": extracted,
             "risk_severity": sev["level"],
             "severity_tag_class": sev["tag_class"],
-            "actionable_advisory": sev["advisory"],
+            "actionable_advisory": "Verified RFC 2606 documentation domain. Safe for reference and testing." if is_rfc_reserved else sev["advisory"],
             "syntax_tokens": syntax_tokens,
         }
 

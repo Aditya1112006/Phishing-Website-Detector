@@ -4,44 +4,56 @@
     "family": "Ensemble Bagging",
     "model_file": "phishing_url_model.pkl",
     "is_champion": true,
-    "accuracy_pct": 99.57,
-    "precision_pct": 99.20,
-    "recall_pct": 99.81,
-    "f1_score_pct": 99.50,
+    "accuracy_pct": 85.88,
+    "precision_pct": 86.7,
+    "recall_pct": 89.94,
+    "f1_score_pct": 88.29,
     "latency": "< 0.4ms",
     "status": "Selected Champion",
     "confusion_matrix": {
-      "true_negative": 26808,
-      "false_positive": 162,
-      "false_negative": 39,
-      "true_positive": 20065
+      "true_negative": 21501,
+      "false_positive": 5378,
+      "false_negative": 3919,
+      "true_positive": 35049
     },
-    "theoretical_rationale": "Optimal Bias-Variance balance. Decorrelates trees via random feature subspace splitting (\u221a18 \u2248 4); models complex non-linear URL patterns."
+    "theoretical_rationale": "Optimal Bias-Variance balance. Subspace feature decorrelation breaks protocol shortcut bias while capturing high-order lexical interactions."
   },
   {
     "model_name": "Decision Tree (CART - Gini)",
     "family": "Single Estimator",
     "model_file": "decision_tree_model.pkl",
     "is_champion": false,
-    "accuracy_pct": 97.8,
-    "precision_pct": 97.2,
-    "recall_pct": 98.1,
-    "f1_score_pct": 97.65,
+    "accuracy_pct": 84.91,
+    "precision_pct": 85.42,
+    "recall_pct": 89.83,
+    "f1_score_pct": 87.57,
     "latency": "< 0.1ms",
     "status": "High Variance",
-    "theoretical_rationale": "Single decision boundary prone to overfitting small lexical URL perturbations without bagging averaging."
+    "confusion_matrix": {
+      "true_negative": 20904,
+      "false_positive": 5975,
+      "false_negative": 3964,
+      "true_positive": 35004
+    },
+    "theoretical_rationale": "Single decision boundary prone to localized variance and overfitting lexical perturbations without bagging averaging."
   },
   {
     "model_name": "Linear SVM (Support Vector)",
     "family": "Max-Margin Classifier",
     "model_file": "linear_svm_model.pkl",
     "is_champion": false,
-    "accuracy_pct": 91.4,
-    "precision_pct": 90.8,
-    "recall_pct": 92.1,
-    "f1_score_pct": 91.45,
+    "accuracy_pct": 82.37,
+    "precision_pct": 84.5,
+    "recall_pct": 85.98,
+    "f1_score_pct": 85.23,
     "latency": "~1.8ms",
     "status": "Linear Bound",
+    "confusion_matrix": {
+      "true_negative": 20731,
+      "false_positive": 6148,
+      "false_negative": 5462,
+      "true_positive": 33506
+    },
     "theoretical_rationale": "Linear separating hyperplane underfits high-order non-linear feature interactions (e.g. protocol + digit density)."
   },
   {
@@ -49,12 +61,18 @@
     "family": "Generalized Linear Model",
     "model_file": "logistic_regression_model.pkl",
     "is_champion": false,
-    "accuracy_pct": 89.2,
-    "precision_pct": 88.5,
-    "recall_pct": 90.1,
-    "f1_score_pct": 89.29,
+    "accuracy_pct": 81.98,
+    "precision_pct": 84.09,
+    "recall_pct": 85.77,
+    "f1_score_pct": 84.92,
     "latency": "< 0.2ms",
     "status": "High Bias",
+    "confusion_matrix": {
+      "true_negative": 20555,
+      "false_positive": 6324,
+      "false_negative": 5544,
+      "true_positive": 33424
+    },
     "theoretical_rationale": "Assumes monotonic log-odds; struggles when individual features are ambiguous but their conjunction is malicious."
   }
 ]

@@ -426,21 +426,31 @@ def predict_url(url: str) -> Dict[str, Any]:
     deep_sub = extracted.get("NoOfSubDomain", 0) > 2
     digit_padding = (extracted.get("NoOfDegitsInURL", 0) >= 15 and extracted.get("DigitRatioInURL", 0) >= 0.15)
 
-    if is_domain_listed and is_https and not has_obf and not deep_sub and not digit_padding:
-        sev = get_risk_severity(0.01, is_trusted=True)
+    if is_domain_listed and not has_obf and not deep_sub and not digit_padding:
+        prob = 0.01 if is_https else 2.50
+        legit_prob = 100.0 - prob
+        sev = get_risk_severity(prob, is_trusted=True)
         tier_desc = (
             "Verified RFC 2606/6761 reserved domain for documentation and testing. Clean TLS infrastructure confirmed."
-            if is_rfc_reserved
-            else "Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed."
+            if is_rfc_reserved and is_https
+            else (
+                "Verified RFC 2606/6761 reserved domain for documentation and testing."
+                if is_rfc_reserved
+                else (
+                    "Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed."
+                    if is_https
+                    else "Verified official domain. Domain identity verified (unencrypted HTTP transport)."
+                )
+            )
         )
         return {
             "result": "LEGITIMATE",
-            "phishing_probability": 0.01,
-            "legitimate_probability": 99.99,
+            "phishing_probability": prob,
+            "legitimate_probability": legit_prob,
             "impersonation_warning": None,
             "defense_tier": "Tier 1: Authority Allowlist",
             "defense_tier_description": tier_desc,
-            "inspection_notes": "Reserved Documentation Domain (RFC 2606)" if is_rfc_reserved else "Verified Clean",
+            "inspection_notes": "Reserved Documentation Domain (RFC 2606)" if is_rfc_reserved else ("Verified Clean" if is_https else "Verified Domain (HTTP)"),
             "insights": get_feature_insights(extracted, is_trusted=True, is_rfc_reserved=is_rfc_reserved),
             "raw_features": extracted,
             "risk_severity": sev["level"],

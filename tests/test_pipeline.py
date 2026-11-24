@@ -105,10 +105,12 @@ class TestMultiTierEngine(unittest.TestCase):
         self.assertEqual(res["defense_tier"], "Tier 1: Authority Allowlist")
         self.assertLessEqual(res["phishing_probability"], 1.0)
 
-    def test_tier1_integrity_fallback_on_insecure_http(self):
-        # Plain HTTP on an authority domain drops out of Tier 1 to Tier 3 ML
+    def test_tier1_insecure_http_handling(self):
+        # Plain HTTP on an authority domain is recognized as legitimate with unencrypted protocol advisory
         res = predict_url("http://www.google.com")
-        self.assertNotEqual(res["defense_tier"], "Tier 1: Authority Allowlist")
+        self.assertEqual(res["result"], "LEGITIMATE")
+        self.assertEqual(res["defense_tier"], "Tier 1: Authority Allowlist")
+        self.assertIn("HTTP", res["inspection_notes"])
 
     def test_tier2_brand_impersonation(self):
         res_paypal = predict_url("https://paypal-security-account-verify.com/login")
@@ -243,6 +245,37 @@ class TestFlaskAPIRoutes(unittest.TestCase):
         self.assertAlmostEqual(champ["precision_pct"], prec, places=2)
         self.assertAlmostEqual(champ["recall_pct"], rec, places=2)
         self.assertAlmostEqual(champ["f1_score_pct"], f1, places=2)
+
+    def test_counterfactual_legitimate_http_resilience(self):
+        """Test that legitimate sites accessed over HTTP are not falsely flagged as phishing."""
+        for u in [
+            "http://www.google.com",
+            "http://en.wikipedia.org",
+            "http://example.com",
+            "http://shooliniuniversity.com"
+        ]:
+            res = predict_url(u)
+            self.assertEqual(res["result"], "LEGITIMATE", f"Failed on {u}: got {res['result']}")
+
+    def test_counterfactual_https_phishing_detection(self):
+        """Test that modern phishing URLs using TLS (HTTPS) are correctly flagged."""
+        for u in [
+            "https://netflix-billing-update.org",
+            "https://paypal-security-center.com/login",
+            "https://appleid-verify-alert.com/account"
+        ]:
+            res = predict_url(u)
+            self.assertEqual(res["result"], "PHISHING", f"Failed on {u}: got {res['result']}")
+
+    def test_counterfactual_benign_query_strings(self):
+        """Test that legitimate deep URLs with queries do not trigger false positives."""
+        for u in [
+            "https://en.wikipedia.org/wiki/Machine_learning?action=edit&lang=en",
+            "https://www.google.com/search?q=cybersecurity+threat+intelligence&hl=en",
+            "https://github.com/search?q=machine-learning&type=repositories"
+        ]:
+            res = predict_url(u)
+            self.assertEqual(res["result"], "LEGITIMATE", f"Failed on {u}: got {res['result']}")
 
 
 if __name__ == "__main__":

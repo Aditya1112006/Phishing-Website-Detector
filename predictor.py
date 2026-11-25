@@ -75,9 +75,15 @@ DEFAULT_TRUSTED_DOMAINS = {
     "paypal.com", "shooliniuniversity.com", "shoolini.org", "digiicampus.com",
     "wikipedia.org", "amazon.com", "netflix.com", "stanford.edu",
     "mit.edu", "harvard.edu", "youtube.com", "linkedin.com",
-    "facebook.com", "twitter.com", "instagram.com", "cloudflare.com"
+    "facebook.com", "twitter.com", "instagram.com", "cloudflare.com",
+    "phishguard-ai-xwol.onrender.com"
 }
 DEFAULT_TRUSTED_DOMAINS.update(RFC_RESERVED_DOMAINS)
+
+# Dynamically trust own cloud instance if running on Render/cloud PaaS
+_render_host = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if _render_host:
+    DEFAULT_TRUSTED_DOMAINS.add(_render_host.strip().lower())
 
 TRUSTED_DOMAINS = set(DEFAULT_TRUSTED_DOMAINS)
 if os.path.exists(Config.TRUSTED_DOMAINS_FILE):
@@ -235,6 +241,9 @@ def is_valid_url_format(text: str) -> bool:
             pass
 
         norm_host = hostname.rstrip(".")
+        if norm_host.lower() in RFC_RESERVED_DOMAINS:
+            return True
+
         host_parts = norm_host.split(".")
         if len(host_parts) < 2:
             return False
@@ -316,8 +325,16 @@ def get_feature_insights(extracted: Dict[str, Any], is_trusted: bool, impersonat
     has_obf = extracted.get("HasObfuscation", 0) == 1
     subdomains = extracted.get("NoOfSubDomain", 0)
 
-    auth_val = "RFC 2606 Reserved Domain" if is_rfc_reserved else ("Verified Official Domain" if is_trusted else "Unlisted / Standard Domain")
-    auth_badge = "RFC 2606" if is_rfc_reserved else ("Verified" if is_trusted else "Unverified")
+    auth_val = (
+        "RFC 2606 Reserved Domain"
+        if is_rfc_reserved
+        else ("Verified Official Domain" if is_trusted else "Standard Web Domain")
+    )
+    auth_badge = (
+        "RFC 2606"
+        if is_rfc_reserved
+        else ("Verified" if is_trusted else "Standard")
+    )
 
     return [
         {
@@ -353,7 +370,7 @@ def get_feature_insights(extracted: Dict[str, Any], is_trusted: bool, impersonat
         {
             "name": "Domain Authority",
             "value": auth_val,
-            "safe": is_trusted,
+            "safe": True,  # Being a standard web domain is completely safe and normal
             "badge": auth_badge,
         },
     ]
@@ -492,9 +509,7 @@ def predict_url(url: str) -> Dict[str, Any]:
 
     tier_desc = "Evaluated against 18 structural and lexical URL features using 100 decision trees."
     if is_domain_listed:
-        if not is_https:
-            tier_desc = "Authority host dropped to Tier 3 ML due to insecure unencrypted HTTP protocol."
-        elif has_obf:
+        if has_obf:
             tier_desc = "Authority host dropped to Tier 3 ML due to detected character/hex obfuscation."
         elif deep_sub:
             tier_desc = "Authority host dropped to Tier 3 ML due to deep nested subdomain anomalies."

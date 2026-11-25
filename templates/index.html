@@ -591,15 +591,14 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                        {% if feat_name == 'IsHTTPS' %}<span class="gini-high">40.2% (Decisive)</span>
-                                                        {% elif feat_name == 'NoOfDegitsInURL' %}<span class="gini-high">12.5% (High)</span>
-                                                        {% elif feat_name == 'DomainLength' %}<span class="gini-high">10.5% (High)</span>
-                                                        {% elif feat_name == 'URLLength' %}<span class="gini-high">9.9% (High)</span>
-                                                        {% elif feat_name == 'DigitRatioInURL' %}<span class="gini-high">8.1% (High)</span>
-                                                        {% elif feat_name == 'NoOfLettersInURL' %}<span class="gini-med">5.9% (Medium)</span>
-                                                        {% elif feat_name == 'LetterRatioInURL' %}<span class="gini-med">4.7% (Medium)</span>
-                                                        {% elif feat_name == 'NoOfSubDomain' %}<span class="gini-med">3.0% (Medium)</span>
-                                                        {% else %}<span class="gini-low">&lt; 2.5% (Supporting)</span>
+                                                        {% if feat_name == 'DomainLength' %}<span class="gini-high">12.7% (Highest)</span>
+                                                        {% elif feat_name == 'IsHTTPS' %}<span class="gini-high">11.0% (Significant)</span>
+                                                        {% elif feat_name == 'DigitRatioInURL' %}<span class="gini-high">10.8% (High)</span>
+                                                        {% elif feat_name == 'NoOfDegitsInURL' %}<span class="gini-high">9.8% (High)</span>
+                                                        {% elif feat_name == 'LetterRatioInURL' %}<span class="gini-med">8.3% (Medium)</span>
+                                                        {% elif feat_name == 'URLLength' %}<span class="gini-med">8.2% (Medium)</span>
+                                                        {% elif feat_name == 'NoOfSubDomain' %}<span class="gini-med">7.1% (Medium)</span>
+                                                        {% else %}<span class="gini-low">&lt; 5.0% (Supporting)</span>
                                                         {% endif %}
                                                     </td>
                                                 </tr>
@@ -701,7 +700,7 @@
                                             </label>
                                         </div>
                                         <p class="vector-desc">Downgrades TLS/SSL encryption to cleartext HTTP protocol.</p>
-                                        <span class="vector-pill">Gini Decider (40.2%): IsHTTPS</span>
+                                        <span class="vector-pill">Debiased Signal (11.0%): IsHTTPS</span>
                                     </div>
 
                                     <!-- Toggle 2: Brand Typosquatting -->
@@ -1242,44 +1241,39 @@
                 <div class="modal-sec-title">Top Feature Importances (Gini Impurity from 100 Decision Trees)</div>
                 <div class="feat-bars-list">
                     <div class="feat-bar-row">
-                        <span class="feat-label">IsHTTPS (Protocol encryption status)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 40.2%;"></div></div>
-                        <span class="feat-val">40.2%</span>
-                    </div>
-                    <div class="feat-bar-row">
-                        <span class="feat-label">NoOfDegitsInURL (Numeric character count)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 12.5%;"></div></div>
-                        <span class="feat-val">12.5%</span>
-                    </div>
-                    <div class="feat-bar-row">
                         <span class="feat-label">DomainLength (Hostname character length)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 10.5%;"></div></div>
-                        <span class="feat-val">10.5%</span>
+                        <div class="feat-track"><div class="feat-fill" style="width: 12.7%;"></div></div>
+                        <span class="feat-val">12.7%</span>
                     </div>
                     <div class="feat-bar-row">
-                        <span class="feat-label">URLLength (Total character length)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 9.9%;"></div></div>
-                        <span class="feat-val">9.9%</span>
+                        <span class="feat-label">IsHTTPS (Protocol encryption status — debiased)</span>
+                        <div class="feat-track"><div class="feat-fill" style="width: 11.0%;"></div></div>
+                        <span class="feat-val">11.0%</span>
                     </div>
                     <div class="feat-bar-row">
                         <span class="feat-label">DigitRatioInURL (Digits-to-total length ratio)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 8.1%;"></div></div>
-                        <span class="feat-val">8.1%</span>
+                        <div class="feat-track"><div class="feat-fill" style="width: 10.8%;"></div></div>
+                        <span class="feat-val">10.8%</span>
                     </div>
                     <div class="feat-bar-row">
-                        <span class="feat-label">NoOfLettersInURL (Alphabet character count)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 5.9%;"></div></div>
-                        <span class="feat-val">5.9%</span>
+                        <span class="feat-label">NoOfDegitsInURL (Numeric character count)</span>
+                        <div class="feat-track"><div class="feat-fill" style="width: 9.8%;"></div></div>
+                        <span class="feat-val">9.8%</span>
                     </div>
                     <div class="feat-bar-row">
                         <span class="feat-label">LetterRatioInURL (Letters-to-total length ratio)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 4.7%;"></div></div>
-                        <span class="feat-val">4.7%</span>
+                        <div class="feat-track"><div class="feat-fill" style="width: 8.3%;"></div></div>
+                        <span class="feat-val">8.3%</span>
+                    </div>
+                    <div class="feat-bar-row">
+                        <span class="feat-label">URLLength (Total character length)</span>
+                        <div class="feat-track"><div class="feat-fill" style="width: 8.2%;"></div></div>
+                        <span class="feat-val">8.2%</span>
                     </div>
                     <div class="feat-bar-row">
                         <span class="feat-label">NoOfSubDomain (Subdomain nesting depth)</span>
-                        <div class="feat-track"><div class="feat-fill" style="width: 3.0%;"></div></div>
-                        <span class="feat-val">3.0%</span>
+                        <div class="feat-track"><div class="feat-fill" style="width: 7.1%;"></div></div>
+                        <span class="feat-val">7.1%</span>
                     </div>
                 </div>
 

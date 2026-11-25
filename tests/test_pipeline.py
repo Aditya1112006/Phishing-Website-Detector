@@ -277,6 +277,25 @@ class TestFlaskAPIRoutes(unittest.TestCase):
             res = predict_url(u)
             self.assertEqual(res["result"], "LEGITIMATE", f"Failed on {u}: got {res['result']}")
 
+    def test_localhost_and_rfc_single_label_hosts(self):
+        """Test that single-label RFC reserved hosts like localhost are valid formats."""
+        for u in ["http://localhost:5000", "http://localhost/", "https://example.com"]:
+            self.assertTrue(is_valid_url_format(u), f"Should be valid URL format: {u}")
+            res = predict_url(u)
+            self.assertEqual(res["result"], "LEGITIMATE")
+
+    def test_own_app_instance_and_standard_domain_insight(self):
+        """Test that own app URL is legitimate and standard domains do not show threat badges."""
+        res_app = predict_url("https://phishguard-ai-xwol.onrender.com/")
+        self.assertEqual(res_app["result"], "LEGITIMATE")
+        self.assertEqual(res_app["defense_tier"], "Tier 1: Authority Allowlist")
+
+        # Test unlisted standard domain has safe=True on Domain Authority insight
+        res_std = predict_url("https://a-random-safe-company-blog.com/")
+        auth_insight = next(i for i in res_std["insights"] if i["name"] == "Domain Authority")
+        self.assertTrue(auth_insight["safe"], "Standard domain should be safe/neutral, not red risk")
+        self.assertEqual(auth_insight["badge"], "Standard")
+
 
 if __name__ == "__main__":
     unittest.main()

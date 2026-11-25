@@ -8,7 +8,8 @@ env.bak/
 venv.bak/
 
 # Data & Datasets (50MB+ CSV files / raw data)
-data/
+data/*
+!data/supplement_legit.txt
 *.csv
 *.parquet
 *.sqlite

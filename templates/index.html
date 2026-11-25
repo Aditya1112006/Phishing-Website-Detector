@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PhishGuard AI — Advanced Multi-Tier Phishing URL Detection & Cyber Threat Intelligence System.">
-    <title>PhishGuard AI — Enterprise Cyber Threat Intelligence Platform</title>
+    <meta name="description" content="PhishGuard AI — Real-Time Phishing Website Detector.">
+    <title>PhishGuard AI — Phishing Website Detector</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
                         <span class="brand-name">PhishGuard</span>
                         <span class="brand-ai-badge">AI</span>
                     </div>
-                    <span class="brand-tagline">Defense-in-Depth Cyber Threat Intelligence Platform</span>
+                    <span class="brand-tagline">Multi-Layer AI Phishing Detection System</span>
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
                 </div>
                 <div class="status-chip chip-latency" title="Average In-Memory Pipeline Latency">
                     <span class="chip-dot dot-cyan"></span>
-                    <span class="chip-text">&lt; 0.5ms Inference</span>
+                    <span class="chip-text">&lt; 0.5ms Speed</span>
                 </div>
             </div>
 
@@ -85,16 +85,16 @@
                     <span class="metric-tag tag-blue">UCI Dataset</span>
                 </div>
                 <div class="metric-value">235,370</div>
-                <div class="metric-sub">PhiUSIIL curated benchmark</div>
+                <div class="metric-sub">Real-world verified URLs</div>
             </div>
 
             <div class="metric-card">
                 <div class="metric-top">
                     <span class="metric-label">Defense Architecture</span>
-                    <span class="metric-tag tag-purple">Hybrid</span>
+                    <span class="metric-tag tag-purple">Multi-Layer</span>
                 </div>
-                <div class="metric-value">4-Tier</div>
-                <div class="metric-sub">Allowlist &bull; Regex &bull; RF &bull; XAI</div>
+                <div class="metric-value">4-Step</div>
+                <div class="metric-sub">Allowlist &bull; Brand Check &bull; AI Model &bull; Analysis</div>
             </div>
 
             <div class="metric-card">
@@ -114,23 +114,23 @@
         <nav class="platform-tabs-nav" aria-label="Platform Modes">
             <button type="button" class="nav-tab-btn active" id="tabScanner">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <span>Threat Scanner</span>
+                <span>URL Scanner</span>
             </button>
             <button type="button" class="nav-tab-btn" id="tabSim">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M10 2v7.31M14 9.3V1.99M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/>
                     <path d="M5.52 16h12.96"/>
                 </svg>
-                <span>Red-Team Simulator</span>
-                <span class="pill-spark">What-If</span>
+                <span>Attack Simulator</span>
+                <span class="pill-spark">Interactive</span>
             </button>
             <button type="button" class="nav-tab-btn" id="tabBatch">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span>Bulk Feed Scan</span>
+                <span>Batch URL Scan</span>
             </button>
             <button type="button" class="nav-tab-btn" id="tabDocs">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                <span>4-Tier Architecture</span>
+                <span>How It Works</span>
             </button>
         </nav>
 
@@ -144,8 +144,8 @@
             <div class="scanner-console-card">
                 <div class="scanner-console-header">
                     <div>
-                        <h2 class="pane-title">Inspect Destination URL</h2>
-                        <p class="pane-sub">Runs the input through multi-tier verification: Authority Allowlist, Brand Engine, and 100 Random Forest trees.</p>
+                        <h2 class="pane-title">Check Any Website URL</h2>
+                        <p class="pane-sub">Checks the URL against trusted websites, brand impersonation filters, and 100 AI decision trees.</p>
                     </div>
                 </div>
 
@@ -162,7 +162,7 @@
                             type="text"
                             name="url"
                             class="terminal-input"
-                            placeholder="Paste destination URL to inspect (e.g. https://example.com/login.php?user=admin)"
+                            placeholder="Paste website URL to check (e.g. https://example.com/login.php?user=admin)"
                             value="{{ url if url else '' }}"
                             autocomplete="off"
                             spellcheck="false"
@@ -174,7 +174,7 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                                 </svg>
-                                <span>Analyze Target</span>
+                                <span>Scan URL</span>
                             </span>
                             <span class="btn-spinner">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -187,22 +187,22 @@
 
                 <!-- Quick Test Pills (Categorized) -->
                 <div class="test-presets-bar">
-                    <span class="presets-label">Quick Test Scenarios:</span>
+                    <span class="presets-label">Try Quick Examples:</span>
                     <div class="presets-chips">
                         <button type="button" class="demo-pill chip-clean" data-fill="https://www.google.com">
-                            <span class="dot-safe"></span> Google (Official Authority)
+                            <span class="dot-safe"></span> Google (Safe Official Site)
                         </button>
                         <button type="button" class="demo-pill chip-clean" data-fill="https://en.wikipedia.org/wiki/Machine_learning">
-                            <span class="dot-safe"></span> Wikipedia (Deep Path & Query)
+                            <span class="dot-safe"></span> Wikipedia (Safe Article & Search)
                         </button>
                         <button type="button" class="demo-pill chip-threat" data-fill="https://paypal-security-center.com/login">
-                            <span class="dot-risk"></span> PayPal Spoof (Brand Attack)
+                            <span class="dot-risk"></span> Fake PayPal (Phishing)
                         </button>
                         <button type="button" class="demo-pill chip-threat" data-fill="http://192.168.1.1/login.php?user=admin">
-                            <span class="dot-risk"></span> Raw IP Link (Masking Attack)
+                            <span class="dot-risk"></span> Raw IP Address (Suspicious)
                         </button>
                         <button type="button" class="demo-pill chip-threat" data-fill="https://netflix-billing-update.org/verify">
-                            <span class="dot-risk"></span> Netflix Impersonation
+                            <span class="dot-risk"></span> Fake Netflix (Phishing)
                         </button>
                     </div>
                 </div>
@@ -247,7 +247,7 @@
                             <div class="verdict-titles">
                                 <div class="verdict-tag-row">
                                     <span class="verdict-classification-tag {{ 'badge-threat' if result == 'PHISHING' else 'badge-clean' }}">
-                                        {{ 'CRITICAL THREAT DETECTED' if result == 'PHISHING' else 'VERIFIED SECURE DESTINATION' }}
+                                        {{ 'DANGEROUS PHISHING WEBSITE DETECTED' if result == 'PHISHING' else 'SAFE VERIFIED WEBSITE' }}
                                     </span>
                                     {% if risk_severity %}
                                     <span class="severity-pill {{ severity_tag_class }}">
@@ -257,13 +257,13 @@
                                     {% endif %}
                                 </div>
                                 <h3 class="verdict-headline">
-                                    {{ 'POTENTIALLY PHISHING URL' if result == 'PHISHING' else 'LIKELY LEGITIMATE URL' }}
+                                    {{ 'SUSPICIOUS PHISHING URL' if result == 'PHISHING' else 'SAFE LEGITIMATE URL' }}
                                 </h3>
                                 <p class="verdict-desc">
                                     {% if result == 'PHISHING' %}
-                                    Structural anomalies or deceptive brand vectors indicate high probability of credential harvesting.
+                                    Suspicious patterns detected that are commonly used in phishing websites to steal user passwords.
                                     {% else %}
-                                    URL verified through authority database and Random Forest structural feature heuristics.
+                                    Website verified through trusted authority database and AI model checks.
                                     {% endif %}
                                 </p>
                             </div>
@@ -275,21 +275,21 @@
                                     {{ phishing_probability if result == 'PHISHING' else legitimate_probability }}<span class="pct-sign">%</span>
                                 </div>
                                 <div class="gauge-label">
-                                    {{ 'Threat Risk Score' if result == 'PHISHING' else 'Trust Confidence Score' }}
+                                    {{ 'Phishing Risk Score' if result == 'PHISHING' else 'Safety Score' }}
                                 </div>
                             </div>
                         </div>
                     </div>
 
 
-                    <!-- SOC Security Analyst Actionable Advisory -->
+                    <!-- Security Analyst Actionable Advisory -->
                     {% if actionable_advisory %}
                     <div class="soc-advisory-card">
                         <div class="advisory-icon-wrap">🛡️</div>
                         <div class="advisory-content">
                             <div class="advisory-top">
-                                <span class="advisory-label">Security Operations Center (SOC) Advisory:</span>
-                                <span class="advisory-sub font-mono">Incident Protocol</span>
+                                <span class="advisory-label">Security Recommendation:</span>
+                                <span class="advisory-sub font-mono">Actionable Advice</span>
                             </div>
                             <p class="advisory-text">{{ actionable_advisory }}</p>
                         </div>
@@ -297,7 +297,7 @@
                     {% endif %}
 
 
-                    <!-- Target Destination URL Display Pill & Forensic Export -->
+                    <!-- Target Destination URL Display Pill & Data Export -->
                     <div class="target-url-strip">
                         <div class="target-url-left">
                             <span class="target-label">Target URL:</span>
@@ -311,17 +311,17 @@
                                 </svg>
                                 <span id="copyTargetText">Copy</span>
                             </button>
-                            <button type="button" class="btn-download-forensic" id="downloadReportBtn" title="Download Forensic Audit Report (.JSON)">
+                            <button type="button" class="btn-download-forensic" id="downloadReportBtn" title="Export Scan Data (.JSON)">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                                 </svg>
-                                <span>Forensic Audit (.JSON)</span>
+                                <span>Export Data (.JSON)</span>
                             </button>
                         </div>
                     </div>
 
 
-                    <!-- Forensic Lexical Syntax Deconstructor -->
+                    <!-- URL Structure Breakdown -->
                     {% if syntax_tokens %}
                     <div class="syntax-deconstructor-card">
                         <div class="syntax-header">
@@ -335,8 +335,8 @@
                                     </svg>
                                 </span>
                                 <div>
-                                    <h4 class="syntax-title">Lexical Syntax Deconstruction</h4>
-                                    <p class="syntax-subtitle">Visual tokenization and protocol-level feature decomposition</p>
+                                    <h4 class="syntax-title">URL Structure Breakdown</h4>
+                                    <p class="syntax-subtitle">Breakdown of protocol, domain, path, and security flags</p>
                                 </div>
                             </div>
                         </div>
@@ -389,7 +389,7 @@
 
                             <!-- Query Token -->
                             {% if syntax_tokens.query %}
-                            <div class="syntax-token-pill token-query" data-tooltip="Query String Parameters | Entropy Vector">
+                            <div class="syntax-token-pill token-query" data-tooltip="Query String Parameters in URL">
                                 <span class="token-label">QUERY</span>
                                 <span class="token-val">{{ syntax_tokens.query }}</span>
                             </div>
@@ -444,7 +444,7 @@
                             <!-- Active Defense Pipeline Step Tracer -->
                             <div class="pipeline-tracer-card">
                                 <div class="tracer-header">
-                                    <span class="tracer-title">4-Tier Defense Execution Route:</span>
+                                    <span class="tracer-title">4-Step Security Verification:</span>
                                     <span class="tracer-active-indicator">Processed in &lt; 0.4ms</span>
                                 </div>
                                 <div class="pipeline-steps">
@@ -467,7 +467,7 @@
                                     <div class="pipe-step {{ 'step-engaged' if defense_tier and 'Tier 3' in defense_tier else 'step-pass' }}">
                                         <div class="step-icon">3</div>
                                         <div class="step-info">
-                                            <span class="step-name">Tier 3: Random Forest</span>
+                                            <span class="step-name">Tier 3: AI Model (Random Forest)</span>
                                             <span class="step-status">{{ 'CLASSIFIED (100 TREES)' if defense_tier and 'Tier 3' in defense_tier else 'Standby' }}</span>
                                         </div>
                                     </div>
@@ -475,7 +475,7 @@
                                     <div class="pipe-step step-engaged">
                                         <div class="step-icon">4</div>
                                         <div class="step-info">
-                                            <span class="step-name">Tier 4: Explainable AI</span>
+                                            <span class="step-name">Tier 4: Safety Breakdown</span>
                                             <span class="step-status">6 Factors Generated</span>
                                         </div>
                                     </div>
@@ -485,7 +485,7 @@
                                 <div class="tier-callout-box">
                                     <span class="callout-icon">🛡️</span>
                                     <div class="callout-body">
-                                        <strong>Active Defense Layer:</strong> <span class="callout-tier">{{ defense_tier }}</span>
+                                        <strong>Active Security Step:</strong> <span class="callout-tier">{{ defense_tier }}</span>
                                         {% if defense_tier_description %}
                                         <span class="callout-desc">&bull; {{ defense_tier_description }}</span>
                                         {% endif %}
@@ -499,18 +499,18 @@
                             <div class="alert-banner banner-warning">
                                 <span class="banner-icon">⚠️</span>
                                 <div class="banner-body">
-                                    <strong>Critical Impersonation Alert:</strong> {{ impersonation_warning }}
+                                    <strong>Fake Brand Alert:</strong> {{ impersonation_warning }}
                                 </div>
                             </div>
                             {% endif %}
 
-                            <!-- Explainable AI (XAI) Factor Cards Grid -->
+                            <!-- Safety Factor Cards Grid -->
                             {% if insights %}
                             <div class="insights-container">
                                 <div class="insights-header">
                                     <div>
-                                        <h4 class="insights-title">Explainable AI (XAI) Inspection Factors</h4>
-                                        <p class="insights-subtitle">Transparency into primary lexical, structural, and cryptographic properties of the target URL.</p>
+                                        <h4 class="insights-title">Website Security Checks</h4>
+                                        <p class="insights-subtitle">Clear breakdown of protocol, domain characteristics, and security flags for this URL.</p>
                                     </div>
                                 </div>
                                 <div class="insights-grid">
@@ -560,23 +560,23 @@
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" id="featuresChevron">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
-                                        <span>Inspect Model Input Vector (All 18 Extracted Features)</span>
+                                        <span>View All 18 Features (Model Inputs)</span>
                                     </div>
-                                    <span class="features-count-tag">18 Features Ensembled</span>
+                                    <span class="features-count-tag">18 Extracted Features</span>
                                 </button>
 
                                 <div class="features-drawer" id="featuresDrawer" style="display: none;">
                                     <p class="features-drawer-sub">
-                                        Exact numerical vectors computed by <code>url_features.py</code> and provided directly to the 100 Scikit-Learn Decision Trees during inference.
+                                        Values extracted from this URL and passed to the 100 Random Forest decision trees.
                                     </p>
                                     <div class="table-container">
                                         <table class="features-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Feature Vector</th>
+                                                    <th>Feature Name</th>
                                                     <th>Computed Value</th>
-                                                    <th>Representation</th>
-                                                    <th>Feature Importance (Gini)</th>
+                                                    <th>Feature Type</th>
+                                                    <th>Importance in Model</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -586,8 +586,8 @@
                                                     <td><span class="val-pill">{{ feat_val }}</span></td>
                                                     <td class="col-dim">
                                                         {% if 'Ratio' in feat_name %}Ratio (0.00 – 1.00)
-                                                        {% elif feat_name.startswith('Is') or feat_name.startswith('Has') %}Binary Flag (0 / 1)
-                                                        {% else %}Discrete Count / Length
+                                                        {% elif feat_name.startswith('Is') or feat_name.startswith('Has') %}Yes / No (0 or 1)
+                                                        {% else %}Count / Length
                                                         {% endif %}
                                                     </td>
                                                     <td>
@@ -616,17 +616,17 @@
                 {% endif %}
 
 
-                <!-- Session Audit Trail (Recent Scans) -->
+                <!-- Session History (Recent Scans) -->
                 <div class="audit-trail-card" id="historySection" style="display: none;">
                     <div class="audit-trail-header">
                         <div class="audit-title-cluster">
                             <span class="audit-icon">🕒</span>
                             <div>
-                                <h4 class="audit-title">Local Session Audit Trail</h4>
-                                <span class="audit-sub">Client-side historical inspection log</span>
+                                <h4 class="audit-title">Recent Scans</h4>
+                                <span class="audit-sub">Saved in browser for this session</span>
                             </div>
                         </div>
-                        <button type="button" class="btn-clear-history" id="clearHistoryBtn">Clear Trail</button>
+                        <button type="button" class="btn-clear-history" id="clearHistoryBtn">Clear History</button>
                     </div>
                     <div class="audit-trail-list" id="historyList"></div>
                 </div>
@@ -635,19 +635,19 @@
 
 
             <!-- ========================================================== -->
-            <!-- TAB 2: RED-TEAM ATTACK VECTOR SIMULATOR                    -->
+            <!-- TAB 2: INTERACTIVE ATTACK SIMULATOR                        -->
             <!-- ========================================================== -->
             <section id="sectionSim" class="tab-pane">
                 <div class="sim-terminal-workspace">
 
                     <div class="sim-top-banner">
                         <div class="sim-badge-cluster">
-                            <span class="badge-red-team">Red-Team Adversarial Sandbox</span>
-                            <span class="badge-reactive">⚡ Live Reactive Feedback</span>
+                            <span class="badge-red-team">Interactive Attack Simulator</span>
+                            <span class="badge-reactive">⚡ Live Real-Time Testing</span>
                         </div>
-                        <h2 class="pane-title">Adversarial "What-If" Attack Vector Simulator</h2>
+                        <h2 class="pane-title">Interactive Phishing Attack Simulator</h2>
                         <p class="pane-sub">
-                            Explore how attackers evade security heuristics. Select a clean base domain, toggle red-team evasion techniques, and watch how model probabilities shift and defense tiers activate in real time.
+                            See how attackers disguise malicious links. Pick a safe website, turn on common attacker tricks, and watch how the AI model and security rules respond in real time.
                         </p>
                     </div>
 
@@ -657,32 +657,32 @@
                             <div class="sim-config-card">
                                 <div class="sim-field-group">
                                     <div class="sim-field-label-row">
-                                        <label for="simBaseDomain" class="sim-label">1. Select Target Base Domain (Clean Starting Point):</label>
-                                        <span class="sim-note">Allowlist verified vs unlisted domains</span>
+                                        <label for="simBaseDomain" class="sim-label">1. Select Base Website:</label>
+                                        <span class="sim-note">Official websites vs general websites</span>
                                     </div>
                                     <div class="sim-select-wrapper">
                                         <select id="simBaseDomain" class="sim-select">
-                                            <option value="paypal.com" data-brand="paypal" selected>paypal.com (Official PayPal — High-Value Financial Target)</option>
-                                            <option value="shooliniuniversity.com" data-brand="shoolini">shooliniuniversity.com (Official Campus Portal — High-Reputation Authority)</option>
-                                            <option value="google.com" data-brand="google">google.com (Official Google — Identity & Search Authority)</option>
-                                            <option value="wikipedia.org" data-brand="wikipedia">wikipedia.org (Official Wikipedia — High-Reputation Knowledge Base)</option>
-                                            <option value="netflix.com" data-brand="netflix">netflix.com (Official Netflix — Streaming & Billing Target)</option>
-                                            <option value="apple.com" data-brand="apple">apple.com (Official Apple — Apple ID & iCloud Auth)</option>
+                                            <option value="paypal.com" data-brand="paypal" selected>paypal.com (Official PayPal — Financial Target)</option>
+                                            <option value="shooliniuniversity.com" data-brand="shoolini">shooliniuniversity.com (Official Campus Portal)</option>
+                                            <option value="google.com" data-brand="google">google.com (Official Google — Search Authority)</option>
+                                            <option value="wikipedia.org" data-brand="wikipedia">wikipedia.org (Official Wikipedia)</option>
+                                            <option value="netflix.com" data-brand="netflix">netflix.com (Official Netflix — Streaming Target)</option>
+                                            <option value="apple.com" data-brand="apple">apple.com (Official Apple — Apple ID Portal)</option>
                                             <option value="microsoft.com" data-brand="microsoft">microsoft.com (Official Microsoft — Enterprise Portal)</option>
-                                            <option value="example-portal.com" data-brand="">example-portal.com (Unlisted Standard Domain — No Allowlist Bypass)</option>
+                                            <option value="example-portal.com" data-brand="">example-portal.com (General Unlisted Website)</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <!-- 6 Cyber Attack Vector Toggles -->
                                 <div class="sim-toggles-header-row">
-                                    <span class="sim-label">2. Adversarial Evasion Modifiers (Red-Team Vectors):</span>
+                                    <span class="sim-label">2. Attacker Tricks to Test:</span>
                                     <button type="button" class="btn-reset-vectors" id="simResetBtn">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                                             <path d="M3 3v5h5"/>
                                         </svg>
-                                        Reset All Vectors
+                                        Reset All
                                     </button>
                                 </div>
 
@@ -692,15 +692,15 @@
                                         <div class="vector-card-top">
                                             <div class="vector-title-group">
                                                 <span class="vector-idx">01</span>
-                                                <span class="vector-name">Strip HTTPS (Insecure HTTP)</span>
+                                                <span class="vector-name">Downgrade to HTTP (No Encryption)</span>
                                             </div>
                                             <label class="cyber-switch">
                                                 <input type="checkbox" id="simToggleHttp">
                                                 <span class="switch-track"></span>
                                             </label>
                                         </div>
-                                        <p class="vector-desc">Downgrades TLS/SSL encryption to cleartext HTTP protocol.</p>
-                                        <span class="vector-pill">Debiased Signal (11.0%): IsHTTPS</span>
+                                        <p class="vector-desc">Removes secure HTTPS encryption, making connection unencrypted.</p>
+                                        <span class="vector-pill">Feature: IsHTTPS (11.0% Importance)</span>
                                     </div>
 
                                     <!-- Toggle 2: Brand Typosquatting -->
@@ -708,15 +708,15 @@
                                         <div class="vector-card-top">
                                             <div class="vector-title-group">
                                                 <span class="vector-idx">02</span>
-                                                <span class="vector-name">Brand Typosquatting / Spoofing</span>
+                                                <span class="vector-name">Fake Brand Name (Lookalike Domain)</span>
                                             </div>
                                             <label class="cyber-switch">
                                                 <input type="checkbox" id="simToggleSpoof">
                                                 <span class="switch-track"></span>
                                             </label>
                                         </div>
-                                        <p class="vector-desc">Appends lookalike brand keywords (e.g. <code>-security-verify.xyz</code>).</p>
-                                        <span class="vector-pill">Triggers Tier 2: Brand Engine</span>
+                                        <p class="vector-desc">Adds fake brand keywords to trick users (e.g. <code>-security-verify.xyz</code>).</p>
+                                        <span class="vector-pill">Triggers Tier 2: Brand Detection</span>
                                     </div>
 
                                     <!-- Toggle 3: Raw IP Hostname -->
@@ -724,15 +724,15 @@
                                         <div class="vector-card-top">
                                             <div class="vector-title-group">
                                                 <span class="vector-idx">03</span>
-                                                <span class="vector-name">Raw IP Address Hostname</span>
+                                                <span class="vector-name">IP Address Instead of Domain</span>
                                             </div>
                                             <label class="cyber-switch">
                                                 <input type="checkbox" id="simToggleIp">
                                                 <span class="switch-track"></span>
                                             </label>
                                         </div>
-                                        <p class="vector-desc">Replaces domain name with raw dotted quad IP (<code>192.168.1.104</code>).</p>
-                                        <span class="vector-pill">IsDomainIP & Numeric Spikes</span>
+                                        <p class="vector-desc">Replaces website name with direct numbers (e.g. <code>192.168.1.104</code>).</p>
+                                        <span class="vector-pill">Feature: IsDomainIP</span>
                                     </div>
 
                                     <!-- Toggle 4: Hex Obfuscation -->
@@ -740,15 +740,15 @@
                                         <div class="vector-card-top">
                                             <div class="vector-title-group">
                                                 <span class="vector-idx">04</span>
-                                                <span class="vector-name">Hex / Percent Encoding</span>
+                                                <span class="vector-name">Encoded Characters (%20, %2E)</span>
                                             </div>
                                             <label class="cyber-switch">
                                                 <input type="checkbox" id="simToggleHex">
                                                 <span class="switch-track"></span>
                                             </label>
                                         </div>
-                                        <p class="vector-desc">Masks path tokens using percent-encoded hex sequences (<code>%20%2F%3D%40</code>).</p>
-                                        <span class="vector-pill">HasObfuscation & Special Chars</span>
+                                        <p class="vector-desc">Hides URL parts using encoded characters like <code>%20</code> or <code>%2F</code>.</p>
+                                        <span class="vector-pill">Feature: HasObfuscation</span>
                                     </div>
 
                                     <!-- Toggle 5: Deep Subdomain Hijack -->
@@ -756,15 +756,15 @@
                                         <div class="vector-card-top">
                                             <div class="vector-title-group">
                                                 <span class="vector-idx">05</span>
-                                                <span class="vector-name">Deep Subdomain Hijack</span>
+                                                <span class="vector-name">Multiple Subdomains (Nested Names)</span>
                                             </div>
                                             <label class="cyber-switch">
                                                 <input type="checkbox" id="simToggleSubdomain">
                                                 <span class="switch-track"></span>
                                             </label>
                                         </div>
-                                        <p class="vector-desc">Chains nested subdomains (<code>login.verify.account.auth...</code>).</p>
-                                        <span class="vector-pill">NoOfSubDomain (Depth Spike)</span>
+                                        <p class="vector-desc">Adds many subdomains to mimic real login pages (<code>login.verify.account...</code>).</p>
+                                        <span class="vector-pill">Feature: NoOfSubDomain</span>
                                     </div>
 
                                     <!-- Toggle 6: Excessive Query Padding -->
@@ -772,15 +772,15 @@
                                         <div class="vector-card-top">
                                             <div class="vector-title-group">
                                                 <span class="vector-idx">06</span>
-                                                <span class="vector-name">Excessive Query Token Padding</span>
+                                                <span class="vector-name">Long Fake Parameters & Random Digits</span>
                                             </div>
                                             <label class="cyber-switch">
                                                 <input type="checkbox" id="simToggleQuery">
                                                 <span class="switch-track"></span>
                                             </label>
                                         </div>
-                                        <p class="vector-desc">Pads total length with fake session hashes, numbers, and symbols.</p>
-                                        <span class="vector-pill">URLLength & DigitRatio</span>
+                                        <p class="vector-desc">Adds long strings of fake IDs and random numbers to the URL.</p>
+                                        <span class="vector-pill">Features: URLLength & DigitRatio</span>
                                     </div>
                                 </div>
                             </div>
@@ -790,7 +790,7 @@
                             <!-- Live Generated Mutating URL Box -->
                             <div class="sim-url-preview-card">
                                 <div class="sim-preview-header">
-                                    <span class="preview-tag">Live Mutated Adversarial URL:</span>
+                                    <span class="preview-tag">Generated Test URL:</span>
                                     <div class="preview-actions">
                                         <button type="button" class="btn-sim-action" id="simCopyBtn" title="Copy to clipboard">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -799,7 +799,7 @@
                                             </svg>
                                             <span id="simCopyText">Copy URL</span>
                                         </button>
-                                        <button type="button" class="btn-sim-action action-accent" id="simTestInMainBtn" title="Analyze this adversarial URL in Threat Scanner">
+                                        <button type="button" class="btn-sim-action action-accent" id="simTestInMainBtn" title="Analyze this URL in the main scanner">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                                             </svg>
@@ -816,13 +816,13 @@
                                     <div class="diag-verdict-cluster">
                                         <span class="diag-shield-icon" id="simEvalIcon">✅</span>
                                         <div>
-                                            <div class="diag-sub">Real-Time Defense Classification</div>
+                                            <div class="diag-sub">Real-Time Security Check</div>
                                             <div class="diag-badge badge-clean" id="simEvalBadge">LEGITIMATE</div>
                                         </div>
                                     </div>
                                     <div class="diag-score-cluster">
                                         <span class="diag-score-num color-legitimate font-mono" id="simEvalScore">0.01%</span>
-                                        <span class="diag-score-sub" id="simEvalScoreSub">Phishing Threat Risk</span>
+                                        <span class="diag-score-sub" id="simEvalScoreSub">Phishing Risk</span>
                                     </div>
                                 </div>
 
@@ -835,7 +835,7 @@
                                 <div class="sim-prob-split-row">
                                     <div class="sim-prob-split-col">
                                         <div class="sim-prob-split-labels">
-                                            <span class="color-phishing font-bold">Threat Risk</span>
+                                            <span class="color-phishing font-bold">Phishing Risk</span>
                                             <span class="font-mono color-phishing font-bold" id="simProbPhishNum">0.01%</span>
                                         </div>
                                         <div class="sim-mini-track">
@@ -844,7 +844,7 @@
                                     </div>
                                     <div class="sim-prob-split-col">
                                         <div class="sim-prob-split-labels">
-                                            <span class="color-legitimate font-bold">Trust Confidence</span>
+                                            <span class="color-legitimate font-bold">Safety Score</span>
                                             <span class="font-mono color-legitimate font-bold" id="simProbLegitNum">99.99%</span>
                                         </div>
                                         <div class="sim-mini-track">
@@ -853,15 +853,15 @@
                                     </div>
                                 </div>
 
-                                <!-- Active Defense Tier Activated Banner -->
+                                <!-- Active Security Step Banner -->
                                 <div class="diag-tier-box" id="simTierBox">
                                     <div class="diag-tier-badge" id="simTierBadge">Tier 1: Authority Allowlist</div>
-                                    <p class="diag-tier-desc" id="simTierDesc">Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed.</p>
+                                    <p class="diag-tier-desc" id="simTierDesc">Verified official website. Secure HTTPS encryption confirmed.</p>
                                 </div>
 
                                 <!-- Live Extracted Signal Indicators Checklist -->
                                 <div class="diag-signals-wrap">
-                                    <div class="diag-signals-header">Live Extracted Signal Indicators:</div>
+                                    <div class="diag-signals-header">Active Security Factors:</div>
                                     <div class="diag-signals-list" id="simSignalsList"></div>
                                 </div>
                             </div>
@@ -873,20 +873,20 @@
 
 
             <!-- ========================================================== -->
-            <!-- TAB 3: BULK / BATCH SCANNER                               -->
+            <!-- TAB 3: BATCH URL SCANNER                                  -->
             <!-- ========================================================== -->
             <section id="sectionBatch" class="tab-pane">
                 <div class="batch-workspace">
                     <div class="batch-desc-box">
-                        <h2 class="pane-title">Bulk Threat Feed Ingestion Console</h2>
-                        <p class="pane-sub">Analyze external security feeds, email security logs, or multi-link datasets (up to 25 URLs per concurrent batch).</p>
+                        <h2 class="pane-title">Batch URL Scanner</h2>
+                        <p class="pane-sub">Scan multiple links at once to check their safety (up to 25 URLs at a time).</p>
                     </div>
 
                     <div class="batch-input-area">
                         <textarea
                             id="batchInput"
                             class="batch-textarea"
-                            placeholder="Enter one target URL per line (up to 25 URLs)&#10;https://www.google.com&#10;https://paypal-security-center.com/login&#10;https://en.wikipedia.org/wiki/Machine_learning"
+                            placeholder="Enter one website link per line (up to 25 URLs)&#10;https://www.google.com&#10;https://paypal-security-center.com/login&#10;https://en.wikipedia.org/wiki/Machine_learning"
                             rows="6"
                             spellcheck="false"
                         ></textarea>
@@ -898,14 +898,14 @@
 
                     <div class="batch-actions-row">
                         <button type="button" class="btn-secondary" id="loadSampleBatchBtn">
-                            ⚡ Load Threat Feed Sample (5 URLs)
+                            ⚡ Load Sample URLs (5 Links)
                         </button>
                         <button type="button" class="btn-execute-scan" id="runBatchBtn">
                             <span class="btn-content">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
                                 </svg>
-                                <span>Analyze Batch Feed</span>
+                                <span>Scan All URLs</span>
                             </span>
                             <span class="btn-spinner" id="batchSpinner" style="display: none;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -928,18 +928,18 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                                 </svg>
-                                <span>Export Audit Report (CSV)</span>
+                                <span>Export as CSV</span>
                             </button>
                         </div>
                         <div class="table-container">
                             <table class="batch-table">
                                 <thead>
                                     <tr>
-                                        <th>Target Destination</th>
-                                        <th>Verdict</th>
-                                        <th>Threat Risk %</th>
-                                        <th>Defense Layer</th>
-                                        <th>Inspection Notes</th>
+                                        <th>Website URL</th>
+                                        <th>Result</th>
+                                        <th>Phishing Risk %</th>
+                                        <th>Security Step</th>
+                                        <th>Details</th>
                                     </tr>
                                 </thead>
                                 <tbody id="batchTableBody"></tbody>
@@ -951,50 +951,50 @@
 
 
             <!-- ========================================================== -->
-            <!-- TAB 4: HOW IT WORKS / 4-TIER ARCHITECTURE                 -->
+            <!-- TAB 4: HOW IT WORKS / 4-STEP SYSTEM                       -->
             <!-- ========================================================== -->
             <section id="sectionDocs" class="tab-pane">
                 <div class="docs-workspace">
                     <div class="docs-header">
-                        <h2 class="pane-title">Defense-in-Depth Pipeline Architecture</h2>
-                        <p class="pane-sub">How PhishGuard AI resolves dataset shortcut learning and prevents false-positive official URL classification.</p>
+                        <h2 class="pane-title">4-Step Defense System</h2>
+                        <p class="pane-sub">How PhishGuard AI detects phishing while preventing false alarms on official websites.</p>
                     </div>
 
                     <div class="tiers-grid">
                         <div class="tier-card">
-                            <div class="tier-card-badge">Tier 1</div>
+                            <div class="tier-card-badge">Step 1</div>
                             <h3 class="tier-card-title">Authority Allowlist</h3>
                             <p class="tier-card-desc">
-                                Database of 390+ verified high-reputation domains (Google, GitHub, Wikipedia, Microsoft, AWS, Apple). Legitimate deep paths and query tokens pass with 0.00% false-positive risk.
+                                Database of 390+ verified official domains (Google, GitHub, Wikipedia, Microsoft, AWS, Apple). Ensures official websites pass safely with zero false alarms.
                             </p>
-                            <div class="tier-card-footer font-mono">&lt; 0.05ms in-memory set lookup</div>
+                            <div class="tier-card-footer font-mono">&lt; 0.05ms fast lookup</div>
                         </div>
 
                         <div class="tier-card">
-                            <div class="tier-card-badge">Tier 2</div>
-                            <h3 class="tier-card-title">Brand Impersonation Engine</h3>
+                            <div class="tier-card-badge">Step 2</div>
+                            <h3 class="tier-card-title">Brand Impersonation Check</h3>
                             <p class="tier-card-desc">
-                                Defends against typosquatting and brand phishing. Delimiter-aware regex rules detect when attackers embed high-profile brands (e.g. <code>paypal-security-update.com</code>) on unverified domains.
+                                Defends against lookalike websites. Regex rules detect when attackers embed well-known brand names (e.g. <code>paypal-security-update.com</code>) into unauthorized domains.
                             </p>
                             <div class="tier-card-footer font-mono">16+ targeted financial & tech brands</div>
                         </div>
 
                         <div class="tier-card">
-                            <div class="tier-card-badge">Tier 3</div>
-                            <h3 class="tier-card-title">Random Forest Classifier</h3>
+                            <div class="tier-card-badge">Step 3</div>
+                            <h3 class="tier-card-title">AI Model (Random Forest)</h3>
                             <p class="tier-card-desc">
-                                100 decision trees evaluating 18 structural features (domain length, digit ratio, letter ratio, subdomain count, hex obfuscation) trained on 235,000+ PhiUSIIL samples.
+                                100 decision trees evaluating 18 URL features (domain length, digit ratio, letter ratio, subdomain count, and special characters) trained on 235,000+ real-world URLs.
                             </p>
-                            <div class="tier-card-footer font-mono">99.57% Held-out Test Accuracy</div>
+                            <div class="tier-card-footer font-mono">99.57% Test Accuracy</div>
                         </div>
 
                         <div class="tier-card">
-                            <div class="tier-card-badge">Tier 4</div>
-                            <h3 class="tier-card-title">Explainable AI (XAI)</h3>
+                            <div class="tier-card-badge">Step 4</div>
+                            <h3 class="tier-card-title">Clear Explanations</h3>
                             <p class="tier-card-desc">
-                                Provides transparency into every classification by exposing key character counts, protocol encryption, and host identity indicators directly to security analysts.
+                                Explains every decision by highlighting key factors like HTTPS encryption, domain length, and suspicious patterns directly to the user.
                             </p>
-                            <div class="tier-card-footer font-mono">6 explainable decision factors</div>
+                            <div class="tier-card-footer font-mono">6 explainable safety factors</div>
                         </div>
                     </div>
 
@@ -1002,8 +1002,8 @@
                         <div class="api-docs-header">
                             <span class="api-plug-icon">🔌</span>
                             <div>
-                                <h3 class="api-title">REST API Endpoints Available</h3>
-                                <p class="api-desc">Integrate PhishGuard AI programmatically into security pipelines, SIEM ingestors, or browser extensions:</p>
+                                <h3 class="api-title">API Endpoints (For Developers)</h3>
+                                <p class="api-desc">Integrate PhishGuard AI into browser extensions, apps, or security tools:</p>
                             </div>
                         </div>
                         <div class="api-code-blocks">
@@ -1057,15 +1057,15 @@
         <div class="modal-card">
             <div class="modal-header">
                 <div>
-                    <h2 class="modal-title">Model Architecture & Academic Benchmarks</h2>
-                    <p class="modal-subtitle">PhiUSIIL Phishing Dataset &bull; 235,370 URLs &bull; Random Forest Classifier (100 Trees)</p>
+                    <h2 class="modal-title">Model Architecture & Performance Comparison</h2>
+                    <p class="modal-subtitle">PhiUSIIL Dataset &bull; 235,370 URLs &bull; Random Forest (100 Trees)</p>
                 </div>
                 <button type="button" class="modal-close" id="closeBenchmarkBtn" title="Close Modal">&times;</button>
             </div>
 
             <div class="modal-body">
                 <!-- Evaluation Metrics -->
-                <div class="modal-sec-title">Held-out Test Set Evaluation Metrics (20% Split, 47,074 Samples)</div>
+                <div class="modal-sec-title">Test Set Performance (20% Split, 47,074 Samples)</div>
                 <div class="bench-metrics-grid">
                     <div class="bench-metric">
                         <div class="bench-metric-val">99.57%</div>
@@ -1086,9 +1086,9 @@
                 </div>
 
                 <!-- Classical ML Benchmark Arena (Comparative Evaluation) -->
-                <div class="modal-sec-title">Classical ML Algorithm Arena (Comparative Benchmark on 235,370 Samples)</div>
+                <div class="modal-sec-title">Machine Learning Model Comparison (235,370 Samples)</div>
                 <p class="arena-subtitle-desc">
-                    Rigorous empirical evaluation of 4 classical supervised machine learning algorithms trained and tested under an identical 80/20 train-test partition on the PhiUSIIL dataset.
+                    Comparison of 4 supervised machine learning models trained and tested on the exact same 80/20 train-test partition of the dataset.
                 </p>
 
                 <div class="arena-table-wrap">
@@ -1100,9 +1100,9 @@
                                 <th>Precision</th>
                                 <th>Recall</th>
                                 <th>F1-Score</th>
-                                <th>Latency</th>
-                                <th>Status / Finding</th>
-                                <th>Theoretical Rationale</th>
+                                <th>Speed</th>
+                                <th>Result</th>
+                                <th>Why / Finding</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1110,7 +1110,7 @@
                                 <td>
                                     <div class="arena-model-cell">
                                         <span class="arena-model-name">⭐ Random Forest (100 Trees)</span>
-                                        <span class="arena-model-family">Ensemble Bagging</span>
+                                        <span class="arena-model-family">Ensemble Method</span>
                                     </div>
                                 </td>
                                 <td><span class="arena-num val-high">99.57%</span></td>
@@ -1118,14 +1118,14 @@
                                 <td><span class="arena-num val-high">99.81%</span></td>
                                 <td><span class="arena-num val-high">99.50%</span></td>
                                 <td><span class="arena-num">&lt; 0.4ms</span></td>
-                                <td><span class="arena-badge badge-champ">Selected Champion</span></td>
-                                <td class="arena-rationale">Optimal Bias-Variance balance. Decorrelates trees via random feature subspace splitting (&radic;18 &asymp; 4); models complex non-linear URL patterns.</td>
+                                <td><span class="arena-badge badge-champ">Best Performer</span></td>
+                                <td class="arena-rationale">Combines 100 decision trees to balance accuracy and generalization; handles complex, non-linear URL patterns exceptionally well.</td>
                             </tr>
                             <tr>
                                 <td>
                                     <div class="arena-model-cell">
-                                        <span class="arena-model-name">Decision Tree (CART - Gini)</span>
-                                        <span class="arena-model-family">Single Estimator</span>
+                                        <span class="arena-model-name">Decision Tree</span>
+                                        <span class="arena-model-family">Single Tree</span>
                                     </div>
                                 </td>
                                 <td><span class="arena-num">97.80%</span></td>
@@ -1133,14 +1133,14 @@
                                 <td><span class="arena-num">98.10%</span></td>
                                 <td><span class="arena-num">97.65%</span></td>
                                 <td><span class="arena-num">&lt; 0.1ms</span></td>
-                                <td><span class="arena-badge badge-variance">High Variance</span></td>
-                                <td class="arena-rationale">Single decision boundary prone to overfitting small lexical URL perturbations without bagging averaging.</td>
+                                <td><span class="arena-badge badge-variance">Overfitting Risk</span></td>
+                                <td class="arena-rationale">A single tree tends to memorize training data and can make mistakes on small variations in URL structure.</td>
                             </tr>
                             <tr>
                                 <td>
                                     <div class="arena-model-cell">
-                                        <span class="arena-model-name">Linear SVM (Support Vector)</span>
-                                        <span class="arena-model-family">Max-Margin Classifier</span>
+                                        <span class="arena-model-name">Support Vector Machine (Linear SVM)</span>
+                                        <span class="arena-model-family">Linear Classifier</span>
                                     </div>
                                 </td>
                                 <td><span class="arena-num">91.40%</span></td>
@@ -1148,14 +1148,14 @@
                                 <td><span class="arena-num">92.10%</span></td>
                                 <td><span class="arena-num">91.45%</span></td>
                                 <td><span class="arena-num">~1.8ms</span></td>
-                                <td><span class="arena-badge badge-constraint">Linear Bound</span></td>
-                                <td class="arena-rationale">Linear separating hyperplane underfits high-order non-linear feature interactions (e.g. protocol + digit density).</td>
+                                <td><span class="arena-badge badge-constraint">Linear Limit</span></td>
+                                <td class="arena-rationale">Draws a straight linear decision boundary, missing complex relationships (such as HTTP combined with high numbers of digits).</td>
                             </tr>
                             <tr>
                                 <td>
                                     <div class="arena-model-cell">
-                                        <span class="arena-model-name">Logistic Regression (L2)</span>
-                                        <span class="arena-model-family">Generalized Linear Model</span>
+                                        <span class="arena-model-name">Logistic Regression</span>
+                                        <span class="arena-model-family">Linear Classifier</span>
                                     </div>
                                 </td>
                                 <td><span class="arena-num">89.20%</span></td>
@@ -1163,8 +1163,8 @@
                                 <td><span class="arena-num">90.10%</span></td>
                                 <td><span class="arena-num">89.29%</span></td>
                                 <td><span class="arena-num">&lt; 0.2ms</span></td>
-                                <td><span class="arena-badge badge-bias">High Bias</span></td>
-                                <td class="arena-rationale">Assumes monotonic log-odds; struggles when individual features are ambiguous but their conjunction is malicious.</td>
+                                <td><span class="arena-badge badge-bias">Too Simple</span></td>
+                                <td class="arena-rationale">Assumes simple linear relationships; struggles when individual features are ambiguous but harmful when combined.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1173,7 +1173,7 @@
                 <!-- Visual Accuracy & F1 Comparison Spectrum -->
                 <div class="arena-spectrum-grid">
                     <div class="arena-spectrum-card">
-                        <div class="spectrum-card-title">Test Set Accuracy Spectrum (%)</div>
+                        <div class="spectrum-card-title">Model Accuracy Comparison (%)</div>
                         <div class="spectrum-bar-list">
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label label-champ">Random Forest</span>
@@ -1199,7 +1199,7 @@
                     </div>
 
                     <div class="arena-spectrum-card">
-                        <div class="spectrum-card-title">Harmonic F1-Score Spectrum (%)</div>
+                        <div class="spectrum-card-title">F1-Score Comparison (%)</div>
                         <div class="spectrum-bar-list">
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label label-champ">Random Forest</span>
@@ -1225,20 +1225,18 @@
                     </div>
                 </div>
 
-                <!-- Classical ML Bias-Variance Theorem Box -->
+                <!-- Random Forest Explanation Box -->
                 <div class="arena-theorem-box">
                     <div class="arena-theorem-title">
-                        <span>📐 Mathematical Grounding: Why Ensemble Bagging Triumphs</span>
+                        <span>💡 Why Random Forest Performs Best</span>
                     </div>
                     <div class="arena-theorem-body">
-                        In classical learning theory, an ensemble of <em>M = 100</em> bagged trees each with variance &sigma;&sup2; and mean pairwise correlation &rho; yields total variance:  
-                        <code>Var(f&#772;) = &rho;&sigma;&sup2; + ((1 - &rho;) / M)&sigma;&sup2;</code>.  
-                        By injecting random feature subspace selection at every decision split (&radic;<em>p</em> &asymp; 4 features per node), correlation &rho; is minimized. This drives variance down toward the theoretical lower bound without inflating bias—delivering a <strong>+1.74% to +10.34%</strong> performance gain over solitary estimators.
+                        Instead of relying on a single decision tree that can make mistakes or overfit, Random Forest builds 100 independent decision trees. Each tree analyzes a random subset of URL features and casts a vote. By averaging all 100 votes, individual errors cancel out, making the prediction much more reliable, stable, and accurate (achieving <strong>99.57% accuracy</strong>).
                     </div>
                 </div>
 
                 <!-- Feature Importances -->
-                <div class="modal-sec-title">Top Feature Importances (Gini Impurity from 100 Decision Trees)</div>
+                <div class="modal-sec-title">Top 7 Feature Importances (From 100 Decision Trees)</div>
                 <div class="feat-bars-list">
                     <div class="feat-bar-row">
                         <span class="feat-label">DomainLength (Hostname character length)</span>
@@ -1246,7 +1244,7 @@
                         <span class="feat-val">12.7%</span>
                     </div>
                     <div class="feat-bar-row">
-                        <span class="feat-label">IsHTTPS (Protocol encryption status — debiased)</span>
+                        <span class="feat-label">IsHTTPS (Protocol encryption status)</span>
                         <div class="feat-track"><div class="feat-fill" style="width: 11.0%;"></div></div>
                         <span class="feat-val">11.0%</span>
                     </div>
@@ -1278,7 +1276,7 @@
                 </div>
 
                 <!-- Confusion Matrix Profile -->
-                <div class="modal-sec-title">Confusion Matrix Profile (Held-out 47,074 Test URLs)</div>
+                <div class="modal-sec-title">Confusion Matrix (47,074 Test URLs)</div>
                 <div class="matrix-grid">
                     <div class="matrix-cell cm-tn">
                         <span class="cm-tag">True Negative (TN)</span>
@@ -1306,11 +1304,11 @@
     </div>
 
 
-    <!-- Forensic Audit Report Data (Standard HTML5 application/json element) -->
+    <!-- Export Data (Standard HTML5 application/json element) -->
     {% if result %}
     <script type="application/json" id="forensicReportJson">
     {
-        "report_title": "PhishGuard AI — Forensic Threat Intelligence Report",
+        "report_title": "PhishGuard AI — Website Security Report",
         "timestamp": "{{ url }}",
         "target_url": "{{ url }}",
         "verdict": "{{ result }}",
@@ -1775,7 +1773,7 @@
                         var jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(reportData, null, 2));
                         var dl = document.createElement("a");
                         dl.setAttribute("href", jsonStr);
-                        dl.setAttribute("download", "phishguard_incident_report_" + Date.now() + ".json");
+                        dl.setAttribute("download", "phishguard_security_report_" + Date.now() + ".json");
                         document.body.appendChild(dl);
                         dl.click();
                         document.body.removeChild(dl);

@@ -350,7 +350,7 @@ def get_feature_insights(extracted: Dict[str, Any], is_trusted: bool, impersonat
             "badge": "High Risk" if is_ip else "Normal",
         },
         {
-            "name": "Character Obfuscation",
+            "name": "Encoded Characters",
             "value": f"{extracted.get('NoOfObfuscatedChar', 0)} encoded chars" if has_obf else "None (Clean)",
             "safe": not has_obf,
             "badge": "Suspicious" if has_obf else "Clean",
@@ -377,43 +377,43 @@ def get_feature_insights(extracted: Dict[str, Any], is_trusted: bool, impersonat
 
 
 def get_risk_severity(phishing_prob: float, is_trusted: bool, impersonated: Optional[str] = None) -> Dict[str, str]:
-    """Map phishing probability and heuristic factors to a 4-level SOC severity level."""
+    """Map phishing probability and safety factors to simple, actionable recommendations."""
     if is_trusted:
         return {
             "level": "Low Risk / Clean",
             "tag_class": "sev-low",
-            "advisory": "Verified official authority domain. TLS/SSL infrastructure confirmed. Destination is safe for navigation."
+            "advisory": "Verified official website. Secure HTTPS encryption confirmed. Safe to visit."
         }
 
     if impersonated:
         return {
             "level": "Critical Threat",
             "tag_class": "sev-crit",
-            "advisory": f"Active Brand Impersonation: Do not enter credentials, 2FA codes, or payment details. Deceptively mimicking {impersonated} on an unverified host."
+            "advisory": f"Fake Brand Alert: Do not enter passwords or payment details. This website is pretending to be {impersonated}."
         }
 
     if phishing_prob >= 80.0:
         return {
             "level": "Critical Threat",
             "tag_class": "sev-crit",
-            "advisory": "Severe phishing heuristics detected. Block destination and avoid downloading payloads or submitting credentials."
+            "advisory": "High probability of phishing detected. Do not enter passwords, credit cards, or personal details on this page."
         }
     if phishing_prob >= 50.0:
         return {
             "level": "High Risk",
             "tag_class": "sev-high",
-            "advisory": "Significant structural anomalies detected by Random Forest heuristics. Restrict navigation or inspect in an isolated sandbox."
+            "advisory": "Suspicious website patterns detected by the AI model. Avoid entering sensitive information."
         }
     if phishing_prob >= 25.0:
         return {
             "level": "Moderate Risk / Suspicious",
             "tag_class": "sev-mod",
-            "advisory": "Elevated lexical complexity or unverified domain reputation. Exercise caution before entering personal data."
+            "advisory": "Unusual website address spelling or formatting detected. Exercise caution before entering personal data."
         }
     return {
         "level": "Low Risk",
         "tag_class": "sev-low",
-        "advisory": "URL features align with standard legitimate web patterns. Standard web security hygiene recommended."
+        "advisory": "This website looks like a normal, safe address. Standard web browsing safety applies."
     }
 
 
@@ -448,15 +448,15 @@ def predict_url(url: str) -> Dict[str, Any]:
         legit_prob = 100.0 - prob
         sev = get_risk_severity(prob, is_trusted=True)
         tier_desc = (
-            "Verified RFC 2606/6761 reserved domain for documentation and testing. Clean TLS infrastructure confirmed."
+            "Verified RFC 2606 reserved domain for documentation and testing (HTTPS confirmed)."
             if is_rfc_reserved and is_https
             else (
-                "Verified RFC 2606/6761 reserved domain for documentation and testing."
+                "Verified RFC 2606 reserved domain for documentation and testing."
                 if is_rfc_reserved
                 else (
-                    "Verified official domain. TLS encryption, clean lexical tokens, and DNS structure confirmed."
+                    "Verified official website. Secure HTTPS encryption confirmed."
                     if is_https
-                    else "Verified official domain. Domain identity verified (unencrypted HTTP transport)."
+                    else "Verified official website. Official domain confirmed (unencrypted HTTP)."
                 )
             )
         )
@@ -484,9 +484,9 @@ def predict_url(url: str) -> Dict[str, Any]:
             "result": "PHISHING",
             "phishing_probability": 99.85,
             "legitimate_probability": 0.15,
-            "impersonation_warning": f"Brand impersonation detected: This domain attempts to mimic '{impersonated}' but is not an official {impersonated} website.",
+            "impersonation_warning": f"Fake brand name detected: This website attempts to mimic '{impersonated}' but is not an official {impersonated} website.",
             "defense_tier": "Tier 2: Brand Impersonation Engine",
-            "defense_tier_description": f"Targeted brand '{impersonated}' detected in unverified domain using delimiter-aware regex.",
+            "defense_tier_description": f"Brand name '{impersonated}' detected in an unauthorized website address.",
             "insights": get_feature_insights(extracted, is_trusted=False, impersonated_brand=impersonated),
             "raw_features": extracted,
             "risk_severity": sev["level"],
@@ -507,14 +507,14 @@ def predict_url(url: str) -> Dict[str, Any]:
     legit_pct = round(float(probabilities[1]) * 100, 2)
     sev = get_risk_severity(phish_pct, is_trusted=False)
 
-    tier_desc = "Evaluated against 18 structural and lexical URL features using 100 decision trees."
+    tier_desc = "Evaluated against 18 URL features using 100 decision trees."
     if is_domain_listed:
         if has_obf:
-            tier_desc = "Authority host dropped to Tier 3 ML due to detected character/hex obfuscation."
+            tier_desc = "Sent to AI model due to encoded characters in URL."
         elif deep_sub:
-            tier_desc = "Authority host dropped to Tier 3 ML due to deep nested subdomain anomalies."
+            tier_desc = "Sent to AI model due to multiple nested subdomains."
         elif digit_padding:
-            tier_desc = "Authority host dropped to Tier 3 ML due to excessive numerical token padding."
+            tier_desc = "Sent to AI model due to an unusual number of digits in URL."
 
     return {
         "result": result,

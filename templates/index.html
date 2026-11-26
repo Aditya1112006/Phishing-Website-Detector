@@ -73,10 +73,10 @@
             <div class="metric-card">
                 <div class="metric-top">
                     <span class="metric-label">Model Accuracy</span>
-                    <span class="metric-tag tag-green">99.57%</span>
+                    <span class="metric-tag tag-green">85.88%</span>
                 </div>
-                <div class="metric-value">99.57<span class="metric-unit">%</span></div>
-                <div class="metric-sub">Held-out test set (47,074 URLs)</div>
+                <div class="metric-value">85.88<span class="metric-unit">%</span></div>
+                <div class="metric-sub">Held-out test set (65,847 URLs)</div>
             </div>
 
             <div class="metric-card">
@@ -84,8 +84,8 @@
                     <span class="metric-label">Training Corpus</span>
                     <span class="metric-tag tag-blue">UCI Dataset</span>
                 </div>
-                <div class="metric-value">235,370</div>
-                <div class="metric-sub">Real-world verified URLs</div>
+                <div class="metric-value">329,233</div>
+                <div class="metric-sub">Debiased verified URLs</div>
             </div>
 
             <div class="metric-card">
@@ -983,9 +983,9 @@
                             <div class="tier-card-badge">Step 3</div>
                             <h3 class="tier-card-title">AI Model (Random Forest)</h3>
                             <p class="tier-card-desc">
-                                100 decision trees evaluating 18 URL features (domain length, digit ratio, letter ratio, subdomain count, and special characters) trained on 235,000+ real-world URLs.
+                                100 decision trees evaluating 18 URL features (domain length, digit ratio, letter ratio, subdomain count, and special characters) trained on 329,000+ real-world URLs.
                             </p>
-                            <div class="tier-card-footer font-mono">99.57% Test Accuracy</div>
+                            <div class="tier-card-footer font-mono">85.88% Test Accuracy</div>
                         </div>
 
                         <div class="tier-card">
@@ -1034,7 +1034,7 @@
                 <span class="footer-brand">PhishGuard AI</span>
             </div>
             <div class="footer-right">
-                <span class="footer-citation">Dataset: PhiUSIIL Phishing Benchmark (235,370 URLs)</span>
+                <span class="footer-citation">Dataset: Debiased PhiUSIIL Benchmark (329,233 URLs)</span>
                 <span class="footer-bullet">&bull;</span>
                 <span class="footer-model font-mono">RandomForest(n_estimators=100)</span>
             </div>
@@ -1058,37 +1058,37 @@
             <div class="modal-header">
                 <div>
                     <h2 class="modal-title">Model Architecture & Performance Comparison</h2>
-                    <p class="modal-subtitle">PhiUSIIL Dataset &bull; 235,370 URLs &bull; Random Forest (100 Trees)</p>
+                    <p class="modal-subtitle">Debiased PhiUSIIL Dataset &bull; 329,233 URLs &bull; Random Forest (100 Trees)</p>
                 </div>
                 <button type="button" class="modal-close" id="closeBenchmarkBtn" title="Close Modal">&times;</button>
             </div>
 
             <div class="modal-body">
                 <!-- Evaluation Metrics -->
-                <div class="modal-sec-title">Test Set Performance (20% Split, 47,074 Samples)</div>
+                <div class="modal-sec-title">Held-out Test Set Performance (20% Split, 65,847 Samples)</div>
                 <div class="bench-metrics-grid">
                     <div class="bench-metric">
-                        <div class="bench-metric-val">99.57%</div>
+                        <div class="bench-metric-val">85.88%</div>
                         <div class="bench-metric-name">Accuracy</div>
                     </div>
                     <div class="bench-metric">
-                        <div class="bench-metric-val">99.20%</div>
+                        <div class="bench-metric-val">86.70%</div>
                         <div class="bench-metric-name">Precision</div>
                     </div>
                     <div class="bench-metric">
-                        <div class="bench-metric-val">99.81%</div>
+                        <div class="bench-metric-val">89.94%</div>
                         <div class="bench-metric-name">Recall</div>
                     </div>
                     <div class="bench-metric">
-                        <div class="bench-metric-val">99.50%</div>
+                        <div class="bench-metric-val">88.29%</div>
                         <div class="bench-metric-name">F1-Score</div>
                     </div>
                 </div>
 
                 <!-- Classical ML Benchmark Arena (Comparative Evaluation) -->
-                <div class="modal-sec-title">Machine Learning Model Comparison (235,370 Samples)</div>
+                <div class="modal-sec-title">Machine Learning Model Comparison (329,233 Samples)</div>
                 <p class="arena-subtitle-desc">
-                    Comparison of 4 supervised machine learning models trained and tested on the exact same 80/20 train-test partition of the dataset.
+                    Rigorous empirical evaluation of 4 supervised machine learning models trained and tested under an identical 80/20 train-test partition on the debiased dataset.
                 </p>
 
                 <div class="arena-table-wrap">
@@ -1113,13 +1113,13 @@
                                         <span class="arena-model-family">Ensemble Method</span>
                                     </div>
                                 </td>
-                                <td><span class="arena-num val-high">99.57%</span></td>
-                                <td><span class="arena-num val-high">99.20%</span></td>
-                                <td><span class="arena-num val-high">99.81%</span></td>
-                                <td><span class="arena-num val-high">99.50%</span></td>
+                                <td><span class="arena-num val-high">85.88%</span></td>
+                                <td><span class="arena-num val-high">86.70%</span></td>
+                                <td><span class="arena-num val-high">89.94%</span></td>
+                                <td><span class="arena-num val-high">88.29%</span></td>
                                 <td><span class="arena-num">&lt; 0.4ms</span></td>
                                 <td><span class="arena-badge badge-champ">Best Performer</span></td>
-                                <td class="arena-rationale">Combines 100 decision trees to balance accuracy and generalization; handles complex, non-linear URL patterns exceptionally well.</td>
+                                <td class="arena-rationale">Optimal Bias-Variance balance. Subspace feature decorrelation breaks protocol shortcut bias while capturing high-order lexical interactions.</td>
                             </tr>
                             <tr>
                                 <td>
@@ -1128,13 +1128,13 @@
                                         <span class="arena-model-family">Single Tree</span>
                                     </div>
                                 </td>
-                                <td><span class="arena-num">97.80%</span></td>
-                                <td><span class="arena-num">97.20%</span></td>
-                                <td><span class="arena-num">98.10%</span></td>
-                                <td><span class="arena-num">97.65%</span></td>
+                                <td><span class="arena-num">84.91%</span></td>
+                                <td><span class="arena-num">85.42%</span></td>
+                                <td><span class="arena-num">89.83%</span></td>
+                                <td><span class="arena-num">87.57%</span></td>
                                 <td><span class="arena-num">&lt; 0.1ms</span></td>
                                 <td><span class="arena-badge badge-variance">Overfitting Risk</span></td>
-                                <td class="arena-rationale">A single tree tends to memorize training data and can make mistakes on small variations in URL structure.</td>
+                                <td class="arena-rationale">Single decision boundary prone to localized variance and overfitting lexical perturbations without bagging averaging.</td>
                             </tr>
                             <tr>
                                 <td>
@@ -1143,13 +1143,13 @@
                                         <span class="arena-model-family">Linear Classifier</span>
                                     </div>
                                 </td>
-                                <td><span class="arena-num">91.40%</span></td>
-                                <td><span class="arena-num">90.80%</span></td>
-                                <td><span class="arena-num">92.10%</span></td>
-                                <td><span class="arena-num">91.45%</span></td>
+                                <td><span class="arena-num">82.37%</span></td>
+                                <td><span class="arena-num">84.50%</span></td>
+                                <td><span class="arena-num">85.98%</span></td>
+                                <td><span class="arena-num">85.23%</span></td>
                                 <td><span class="arena-num">~1.8ms</span></td>
                                 <td><span class="arena-badge badge-constraint">Linear Limit</span></td>
-                                <td class="arena-rationale">Draws a straight linear decision boundary, missing complex relationships (such as HTTP combined with high numbers of digits).</td>
+                                <td class="arena-rationale">Linear separating hyperplane underfits high-order non-linear feature interactions (e.g. protocol + digit density).</td>
                             </tr>
                             <tr>
                                 <td>
@@ -1158,13 +1158,13 @@
                                         <span class="arena-model-family">Linear Classifier</span>
                                     </div>
                                 </td>
-                                <td><span class="arena-num">89.20%</span></td>
-                                <td><span class="arena-num">88.50%</span></td>
-                                <td><span class="arena-num">90.10%</span></td>
-                                <td><span class="arena-num">89.29%</span></td>
+                                <td><span class="arena-num">81.98%</span></td>
+                                <td><span class="arena-num">84.09%</span></td>
+                                <td><span class="arena-num">85.77%</span></td>
+                                <td><span class="arena-num">84.92%</span></td>
                                 <td><span class="arena-num">&lt; 0.2ms</span></td>
                                 <td><span class="arena-badge badge-bias">Too Simple</span></td>
-                                <td class="arena-rationale">Assumes simple linear relationships; struggles when individual features are ambiguous but harmful when combined.</td>
+                                <td class="arena-rationale">Assumes monotonic log-odds; struggles when individual features are ambiguous but their conjunction is malicious.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1177,23 +1177,23 @@
                         <div class="spectrum-bar-list">
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label label-champ">Random Forest</span>
-                                <div class="spectrum-track"><div class="spectrum-fill fill-champ" style="width: 99.57%;"></div></div>
-                                <span class="spectrum-val">99.57%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill fill-champ" style="width: 85.88%;"></div></div>
+                                <span class="spectrum-val">85.88%</span>
                             </div>
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label">Decision Tree</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 97.80%;"></div></div>
-                                <span class="spectrum-val">97.80%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 84.91%;"></div></div>
+                                <span class="spectrum-val">84.91%</span>
                             </div>
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label">Linear SVM</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 91.40%;"></div></div>
-                                <span class="spectrum-val">91.40%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 82.37%;"></div></div>
+                                <span class="spectrum-val">82.37%</span>
                             </div>
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label">Logistic Reg.</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 89.20%;"></div></div>
-                                <span class="spectrum-val">89.20%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 81.98%;"></div></div>
+                                <span class="spectrum-val">81.98%</span>
                             </div>
                         </div>
                     </div>
@@ -1203,23 +1203,23 @@
                         <div class="spectrum-bar-list">
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label label-champ">Random Forest</span>
-                                <div class="spectrum-track"><div class="spectrum-fill fill-champ" style="width: 99.60%;"></div></div>
-                                <span class="spectrum-val">99.60%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill fill-champ" style="width: 88.29%;"></div></div>
+                                <span class="spectrum-val">88.29%</span>
                             </div>
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label">Decision Tree</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 97.65%;"></div></div>
-                                <span class="spectrum-val">97.65%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 87.57%;"></div></div>
+                                <span class="spectrum-val">87.57%</span>
                             </div>
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label">Linear SVM</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 91.45%;"></div></div>
-                                <span class="spectrum-val">91.45%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 85.23%;"></div></div>
+                                <span class="spectrum-val">85.23%</span>
                             </div>
                             <div class="spectrum-bar-row">
                                 <span class="spectrum-label">Logistic Reg.</span>
-                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 89.29%;"></div></div>
-                                <span class="spectrum-val">89.29%</span>
+                                <div class="spectrum-track"><div class="spectrum-fill" style="width: 84.92%;"></div></div>
+                                <span class="spectrum-val">84.92%</span>
                             </div>
                         </div>
                     </div>
@@ -1231,7 +1231,7 @@
                         <span>💡 Why Random Forest Performs Best</span>
                     </div>
                     <div class="arena-theorem-body">
-                        Instead of relying on a single decision tree that can make mistakes or overfit, Random Forest builds 100 independent decision trees. Each tree analyzes a random subset of URL features and casts a vote. By averaging all 100 votes, individual errors cancel out, making the prediction much more reliable, stable, and accurate (achieving <strong>99.57% accuracy</strong>).
+                        Instead of relying on a single decision tree that can make mistakes or overfit, Random Forest builds 100 independent decision trees. Each tree analyzes a random subset of URL features and casts a vote. By averaging all 100 votes, individual errors cancel out, making the prediction much more reliable, stable, and accurate (achieving <strong>85.88% accuracy</strong> and <strong>89.94% recall</strong> on the debiased benchmark).
                     </div>
                 </div>
 
@@ -1276,26 +1276,26 @@
                 </div>
 
                 <!-- Confusion Matrix Profile -->
-                <div class="modal-sec-title">Confusion Matrix (47,074 Test URLs)</div>
+                <div class="modal-sec-title">Confusion Matrix (65,847 Test URLs)</div>
                 <div class="matrix-grid">
                     <div class="matrix-cell cm-tn">
                         <span class="cm-tag">True Negative (TN)</span>
-                        <span class="cm-count">26,808</span>
+                        <span class="cm-count">21,501</span>
                         <span class="cm-desc">Legitimate correctly verified</span>
                     </div>
                     <div class="matrix-cell cm-fp">
                         <span class="cm-tag">False Positive (FP)</span>
-                        <span class="cm-count">162</span>
+                        <span class="cm-count">5,378</span>
                         <span class="cm-desc">Legitimate flagged as threat</span>
                     </div>
                     <div class="matrix-cell cm-fn">
                         <span class="cm-tag">False Negative (FN)</span>
-                        <span class="cm-count">39</span>
+                        <span class="cm-count">3,919</span>
                         <span class="cm-desc">Phishing missed as safe</span>
                     </div>
                     <div class="matrix-cell cm-tp">
                         <span class="cm-tag">True Positive (TP)</span>
-                        <span class="cm-count">20,065</span>
+                        <span class="cm-count">35,049</span>
                         <span class="cm-desc">Phishing correctly caught</span>
                     </div>
                 </div>
@@ -1323,11 +1323,11 @@
         "raw_feature_vector_18": {{ raw_features|tojson if raw_features else '{}' }},
         "model_metadata": {
             "model_type": "Random Forest Classifier (100 Decision Trees)",
-            "training_corpus": "PhiUSIIL Phishing Benchmark (235,370 URLs)",
-            "accuracy": "99.57%",
-            "precision": "99.20%",
-            "recall": "99.81%",
-            "f1_score": "99.50%"
+            "training_corpus": "Debiased PhiUSIIL Phishing Benchmark (329,233 URLs)",
+            "accuracy": "85.88%",
+            "precision": "86.70%",
+            "recall": "89.94%",
+            "f1_score": "88.29%"
         }
     }
     </script>

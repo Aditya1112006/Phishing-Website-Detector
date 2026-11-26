@@ -59,5 +59,7 @@ desktop.ini
 
 # Project Internal Documentation & Reports
 PROJECT_DOCUMENTATION.txt
+PROJECT_PRESENTATION_DATA.txt
+*.bak
 
 archive/

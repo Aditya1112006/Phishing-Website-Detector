@@ -3,8 +3,8 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.1.3-000000.svg?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.7.2-F7931E.svg?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![Classical ML](https://img.shields.io/badge/ML%20Architecture-Classical%20(No%20Deep%20Learning)-2ea44f.svg)]()
-[![Model Accuracy](https://img.shields.io/badge/Held--Out%20Accuracy-99.57%25-brightgreen.svg)]()
+[![Supervised ML](https://img.shields.io/badge/ML%20Architecture-Supervised%20Tree%20Ensemble-2ea44f.svg)]()
+[![Model Accuracy](https://img.shields.io/badge/Held--Out%20Accuracy-85.88%25-brightgreen.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 PhishGuard AI is a real-time phishing URL detection engine and security analyst console built with Python, scikit-learn, and Flask. 
@@ -74,9 +74,9 @@ A common pitfall with pure machine learning on security data is **shortcut learn
                                  └────────────────────────────┘
 ```
 
-1. **Tier 1 — Authority Allowlist & Sanity Check:** Verified domains (Google, Wikipedia, educational portals) pass with `0.01%` risk in `< 0.1ms`. Crucially, an allowlisted domain **only** bypasses ML if it passes cryptographic checks: it must use secure HTTPS, have no hex obfuscation, and have no abnormal subdomain nesting. If someone types `http://www.google.com` or `google.com%2Eevil.com`, it drops immediately to Tier 3.
+1. **Tier 1 — Authority Allowlist & Sanity Check:** Verified domains (Google, Wikipedia, educational portals) pass in `< 0.05ms`. Crucially, an allowlisted domain only bypasses ML if it passes cryptographic checks: it must have no hex obfuscation and no abnormal subdomain nesting. If an allowlisted link uses unencrypted `http://`, it remains in Tier 1 with a low 2.50% risk score and an explicit unencrypted protocol advisory. However, if structural obfuscation (e.g. `google.com%2Eevil.com`) or excessive subdomains are detected, it drops immediately to lower tiers.
 2. **Tier 2 — Brand Impersonation Engine:** Catches deliberate typosquatting and brand phishing before machine learning. Pre-compiled regular expressions scan for high-value targets (PayPal, Netflix, Apple, Microsoft, Amazon, etc.) surrounded by delimiters like `paypal-security-login.com` or `netflix-billing-update.org`, issuing a `99.85%` threat verdict.
-3. **Tier 3 — Random Forest Ensemble:** Evaluates general and unlisted URLs using 100 bagged decision trees trained on 235,370 URLs.
+3. **Tier 3 — Random Forest Ensemble:** Evaluates general and unlisted URLs using 100 bagged decision trees trained on a debiased corpus of 329,233 URLs (derived from the UCI PhiUSIIL benchmark).
 4. **Tier 4 — Explainable AI (XAI) & Lexical Deconstruction:** Deconstructs the URL into scheme, domain, TLD, path, parameters, and flags potential security risks (insecure protocol, raw IP, high digit ratio) so the user understands the rationale behind the verdict.
 
 ---
@@ -155,47 +155,47 @@ Test how defensive layers respond to active evasion techniques:
 
 ## Model Performance & Comparative Benchmarks
 
-All models were trained and tested on an identical 80/20 stratified split of the **PhiUSIIL Phishing Dataset** (235,370 unique URLs: 100,520 phishing / 134,850 legitimate):
+All models were trained and tested on an identical 80/20 stratified split of the **Debiased PhiUSIIL Phishing Benchmark** (329,233 unique URLs, with 65,847 held-out test samples):
 
 | Algorithm / Model | Model Family | Accuracy | Precision | Recall | F1-Score | Inference Latency | Finding / Rationale |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| ⭐ **Random Forest (100 Trees)** | **Ensemble Bagging** | **99.57%** | **99.20%** | **99.81%** | **99.50%** | **0.60 ms** | **Selected Champion.** Optimal bias-variance trade-off through subspace feature decorrelation. |
-| **Decision Tree (CART - Gini)** | Single Tree | 97.80% | 97.20% | 98.10% | 97.65% | 0.08 ms | **High Variance.** Prone to over-reacting to small lexical shifts without ensemble voting. |
-| **Linear SVM** | Max-Margin | 91.40% | 90.80% | 92.10% | 91.45% | 1.80 ms | **Linear Bound.** Underfits non-linear feature conjunctions (e.g., digit density + protocol). |
-| **Logistic Regression (L2)** | Generalized Linear | 89.20% | 88.50% | 90.10% | 89.29% | 0.15 ms | **High Bias.** Struggles when individual features are ambiguous but malicious in combination. |
+| ⭐ **Random Forest (100 Trees)** | **Ensemble Bagging** | **85.88%** | **86.70%** | **89.94%** | **88.29%** | **< 0.40 ms** | **Selected Champion.** Optimal bias-variance balance. Subspace feature decorrelation breaks shortcut bias while capturing high-order lexical interactions. |
+| **Decision Tree (CART - Gini)** | Single Tree | 84.91% | 85.42% | 89.83% | 87.57% | < 0.10 ms | **High Variance.** Prone to over-reacting to small lexical shifts without ensemble voting. |
+| **Linear SVM** | Max-Margin | 82.37% | 84.50% | 85.98% | 85.23% | ~1.80 ms | **Linear Bound.** Underfits non-linear feature interactions (e.g., protocol + digit density). |
+| **Logistic Regression (L2)** | Generalized Linear | 81.98% | 84.09% | 85.77% | 84.92% | < 0.20 ms | **High Bias.** Struggles when individual features are ambiguous but malicious in combination. |
 
-### Why Classical ML Over Deep Learning?
-In many academic circles, deep learning is often applied by default. For URL classification, classical tree ensembles are deliberately superior:
-- **Zero GPU Overhead:** Runs anywhere—on lightweight firewall micro-instances, router gateways, or laptop CPUs.
-- **Explainability:** Feature splits can be audited with exact Gini impurity metrics rather than blackbox neural activations.
-- **Tabular Data Efficiency:** Random Forest consistently outperforms deep neural networks on structured numerical feature tables.
+### Model Efficiency & Production Advantages
+For real-time URL classification, the Random Forest ensemble provides distinct architectural advantages:
+- **Lightweight Hardware Footprint:** Runs anywhere—on lightweight firewall micro-instances, local servers, or laptop CPUs with < 25MB RAM.
+- **Explainability:** Feature splits can be audited with exact Gini impurity metrics and transparent feature weights.
+- **Tabular Data Efficiency:** Random Forest excels at learning complex non-linear combinations from structured numerical features.
 
 ---
 
 ## Feature Engineering (The 18 Signals)
 
-Features are computed using standard Python string and URL parsing operations in **`~0.013 ms`**:
+Features are computed using standard Python string and URL parsing operations in **`~0.013 ms`**. Following Counterfactual Data Augmentation (CDA), the model relies on a balanced set of structural properties rather than shortcutting on protocol encryption:
 
-| # | Feature | Description | Gini Importance |
+| # | Feature | Description | Model Importance |
 |---|---|---|:---:|
-| 1 | `IsHTTPS` | Whether URL uses TLS encryption (`1` for HTTPS, `0` for HTTP) | **40.2%** |
-| 2 | `NoOfSubDomain` | Number of dot-separated subdomain labels | **11.5%** |
-| 3 | `URLLength` | Total character length of full URL | **9.8%** |
-| 4 | `TLDLength` | Length of top-level domain string | **7.4%** |
-| 5 | `DomainLength` | Length of registered domain name | **6.1%** |
-| 6 | `NoOfDegitsInURL` | Count of numeric digits | **5.3%** |
-| 7 | `DigitRatioInURL` | Ratio of digits to total URL length | **4.7%** |
-| 8 | `NoOfLettersInURL`| Count of alphabetic characters | **3.9%** |
-| 9 | `LetterRatioInURL`| Ratio of letters to total URL length | **3.2%** |
-| 10 | `NoOfHyphensInURL`| Count of `-` characters | **2.4%** |
-| 11 | `NoOfDotsInURL` | Count of `.` characters | **1.9%** |
-| 12 | `IsDomainIP` | Binary flag if host is an IPv4 or IPv6 address | **1.1%** |
-| 13 | `HasObfuscation` | Binary flag for percent-encoded hex sequences | **0.8%** |
-| 14 | `NoOfObfuscatedChar` | Total count of `%xx` entities | **0.5%** |
-| 15 | `ObfuscationRatio` | Ratio of encoded entities to URL length | **0.4%** |
-| 16 | `NoOfEqualsInURL` | Count of `=` query characters | **0.4%** |
-| 17 | `NoOfQMarkInURL` | Count of `?` parameter markers | **0.3%** |
-| 18 | `NoOfAmpersandInURL` | Count of `&` query argument delimiters | **0.1%** |
+| 1 | `DomainLength` | Length of registered domain name | **12.7%** (Highest) |
+| 2 | `IsHTTPS` | Whether URL uses TLS encryption (`1` for HTTPS, `0` for HTTP — debiased) | **11.0%** (Balanced) |
+| 3 | `DigitRatioInURL` | Ratio of digits to total URL length | **10.8%** (High) |
+| 4 | `NoOfDegitsInURL` | Count of numeric digits | **9.8%** (High) |
+| 5 | `LetterRatioInURL`| Ratio of letters to total URL length | **8.3%** (Medium) |
+| 6 | `URLLength` | Total character length of full URL | **8.2%** (Medium) |
+| 7 | `NoOfSubDomain` | Number of dot-separated subdomain labels | **7.1%** (Medium) |
+| 8 | `NoOfLettersInURL`| Count of alphabetic characters | **5.1%** |
+| 9 | `TLDLength` | Length of top-level domain string | **4.9%** |
+| 10 | `NoOfHyphensInURL`| Count of `-` characters | **4.2%** |
+| 11 | `NoOfDotsInURL` | Count of `.` characters | **3.8%** |
+| 12 | `IsDomainIP` | Binary flag if host is an IPv4 or IPv6 address | **3.5%** |
+| 13 | `HasObfuscation` | Binary flag for percent-encoded hex sequences | **2.9%** |
+| 14 | `NoOfObfuscatedChar` | Total count of `%xx` entities | **2.2%** |
+| 15 | `ObfuscationRatio` | Ratio of encoded entities to URL length | **1.9%** |
+| 16 | `NoOfEqualsInURL` | Count of `=` query characters | **0.8%** |
+| 17 | `NoOfQMarkInURL` | Count of `?` parameter markers | **0.5%** |
+| 18 | `NoOfAmpersandInURL` | Count of `&` query argument delimiters | **0.4%** |
 
 ---
 
@@ -273,7 +273,7 @@ curl -X POST http://127.0.0.1:5000/api/batch_predict \
 
 ## Running Automated Tests
 
-The test suite covers normal domains, invalid strings, edge cases (IPv4, IPv6, port numbers, trailing dots), latency benchmarks, and Flask API routes.
+The test suite covers normal domains, invalid strings, edge cases (IPv4, IPv6, port numbers, trailing dots), latency benchmarks, and Flask API routes (33 automated test cases passing in < 0.3s).
 
 Execute all unit and integration tests:
 ```bash
@@ -298,10 +298,11 @@ python train_comparative_models.py
 Phishing-Website-Detector/
 ├── app.py                         # Flask web application & REST API routes
 ├── config.py                      # Centralized environment configuration (.env loader)
-├── predictor.py                   # 4-Tier Hybrid Defense-in-Depth pipeline
+├── predictor.py                   # 4-Step Hybrid Defense-in-Depth pipeline
 ├── url_features.py                # 18-signal structural & lexical feature extractor
 ├── train_comparative_models.py    # Multi-model training, benchmarking & audit generator
 ├── requirements.txt               # Pinned Python package dependencies
+├── runtime.txt                    # Cloud deployment Python version (python-3.11.10)
 ├── .env.example                   # Environment configuration template
 ├── .gitignore                     # Git exclusion rules
 ├── EXECUTION_GUIDE.md             # Detailed installation and setup guide
@@ -310,10 +311,10 @@ Phishing-Website-Detector/
 │
 ├── scripts/
 │   ├── data_preprocessing.py      # Automated dataset debiasing & counterfactual augmentation
-│   └── debug_url.py               # Forensic CLI tool to inspect individual URLs
+│   └── debug_url.py               # CLI tool to inspect individual URLs
 │
 ├── tests/
-│   └── test_pipeline.py           # Comprehensive automated test suite (25 test cases)
+│   └── test_pipeline.py           # Comprehensive automated test suite (33 test cases)
 │
 ├── static/
 │   └── style.css                  # Obsidian glassmorphic styling
@@ -322,8 +323,9 @@ Phishing-Website-Detector/
 │   └── index.html                 # Web dashboard interface (Jinja2)
 │
 └── models/                        # Serialized ML models & benchmark logs (generated)
-    ├── phishing_url_model.pkl     # Deployed Random Forest model (22.8 MB)
-    ├── decision_tree_model.pkl    # CART Decision Tree model (28.3 KB)
+    ├── phishing_url_model.pkl     # Deployed Random Forest model (28.2 MB)
+    ├── phishing_url_features.pkl  # 18-feature vector names (316 bytes)
+    ├── decision_tree_model.pkl    # CART Decision Tree model (114.5 KB)
     ├── linear_svm_model.pkl       # Support Vector Classifier (1.4 KB)
     ├── logistic_regression_model.pkl # Generalized Linear Classifier (1.5 KB)
     ├── training_benchmark_proof.txt  # Human-readable benchmark report
